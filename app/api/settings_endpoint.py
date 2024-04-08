@@ -1,7 +1,7 @@
 from typing import List
 
 from app.api.auth.permissions import Permissions
-from tracardi.config import elastic, redis_config, tracardi, memory_cache
+from tracardi.config import elastic, redis_config, tracardi, memory_cache, mysql
 from app.config import *
 from fastapi import APIRouter, Depends
 from tracardi.domain.settings import SystemSettings
@@ -155,9 +155,37 @@ system_settings = [
     ),
     SystemSettings(
         **{
-            "label": "STORAGE_DRIVER",
-            "value": tracardi.storage_driver,
-            "desc": "The name of storage driver, defaults to 'elastic'."
+            "label": "MYSQL_HOST",
+            "value": mysql.mysql_host,
+            "desc": "Mysql host."
+        }
+    ),
+    SystemSettings(
+        **{
+            "label": "MYSQL_DATABASE",
+            "value": mysql.mysql_database,
+            "desc": "Default: tracardi, Mysql database."
+        }
+    ),
+    SystemSettings(
+        **{
+            "label": "MYSQL_PORT",
+            "value": mysql.mysql_port,
+            "desc": "Default: 3306, Mysql port."
+        }
+    ),
+    SystemSettings(
+        **{
+            "label": "MYSQL_SCHEMA",
+            "value": mysql.mysql_schema,
+            "desc": "Default: mysql+aiomysql://, Mysql schema."
+        }
+    ),
+    SystemSettings(
+        **{
+            "label": "MYSQL_SCHEMA_SYNC",
+            "value": mysql.mysql_schema_sync,
+            "desc": "Default: mysql+pymysql://, Mysql sync schema."
         }
     ),
     SystemSettings(
