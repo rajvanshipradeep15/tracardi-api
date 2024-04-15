@@ -20,13 +20,11 @@ router = APIRouter(
 
 
 @router.get("/profile/count", tags=["profile"],
-            dependencies=[Depends(Permissions(roles=["admin", "developer", "marketer", "maintainer"]))],
             include_in_schema=tracardi.expose_gui_api)
 async def count_profiles():
     return await profile_db.count()
 
 @router.get("/profile/duplicates/count", tags=["profile"],
-            dependencies=[Depends(Permissions(roles=["admin", "developer", "marketer", "maintainer"]))],
             include_in_schema=tracardi.expose_gui_api)
 async def count_profile_duplicates(id: str):
     profile = await load_profile(id)

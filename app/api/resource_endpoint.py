@@ -14,9 +14,7 @@ from ..service.grouping import get_result_dict, get_grouped_result
 
 logger = get_logger(__name__)
 
-router = APIRouter(
-    dependencies=[Depends(Permissions(roles=["admin", "developer"]))]
-)
+router = APIRouter()
 
 rs = ResourceService()
 
@@ -32,6 +30,7 @@ async def _store_record(resource: Resource):
 @router.get("/resources/type/{type}",
             tags=["resource"],
             response_model=dict,
+            dependencies=[Depends(Permissions(roles=["admin", "developer", "marketer"]))],
             include_in_schema=tracardi.expose_gui_api)
 async def resource_types_list(type: TypeEnum) -> dict:
     """
@@ -57,6 +56,7 @@ async def resource_types_list(type: TypeEnum) -> dict:
 
 @router.get("/resources/entity/tag/{tag}",
             tags=["resource"],
+            dependencies=[Depends(Permissions(roles=["admin", "developer", "marketer"]))],
             include_in_schema=tracardi.expose_gui_api)
 async def list_resources_names_by_tag(tag: str):
     """
@@ -68,15 +68,16 @@ async def list_resources_names_by_tag(tag: str):
 
 @router.get("/resources/entity",
             tags=["resource"],
+            dependencies=[Depends(Permissions(roles=["admin", "developer", "marketer"]))],
             include_in_schema=tracardi.expose_gui_api)
 async def list_all_resources():
-
     records = await rs.load_all(limit=250)
     return get_result_dict(records, map_to_named_entity)
 
 
 @router.get("/resources",
             tags=["resource"],
+            dependencies=[Depends(Permissions(roles=["admin", "developer", "marketer"]))],
             include_in_schema=tracardi.expose_gui_api)
 async def list_resources():
     records = await rs.load_all()
@@ -85,15 +86,18 @@ async def list_resources():
 
 @router.get("/resources/by_type",
             tags=["resource"],
+            dependencies=[Depends(Permissions(roles=["admin", "developer", "marketer"]))],
             include_in_schema=tracardi.expose_gui_api)
 async def list_resources_by_type(query: str = None, limit:int = 200):
     records = await rs.load_all(search=query, limit=limit)
 
     return get_grouped_result("Resources", records, map_to_resource)
 
+
 @router.get("/resource/{id}",
             tags=["resource"],
             response_model=Optional[Resource],
+            dependencies=[Depends(Permissions(roles=["admin", "developer"]))],
             include_in_schema=tracardi.expose_gui_api)
 async def get_resource_by_id(id: str) -> Optional[Resource]:
     """
@@ -103,15 +107,17 @@ async def get_resource_by_id(id: str) -> Optional[Resource]:
     return record.map_to_object(map_to_resource)
 
 
-@router.post("/resource", tags=["resource"],
+@router.post("/resource",
+             tags=["resource"],
+             dependencies=[Depends(Permissions(roles=["admin", "developer"]))],
              include_in_schema=tracardi.expose_gui_api)
 async def upsert_resource(resource: Resource):
     return await _store_record(resource)
 
 
-@router.delete("/resource/{id}", tags=["resource"],
+@router.delete("/resource/{id}",
+               tags=["resource"],
+               dependencies=[Depends(Permissions(roles=["admin", "developer"]))],
                include_in_schema=tracardi.expose_gui_api)
 async def delete_resource(id: str):
     return await rs.delete_by_id(id)
-
-

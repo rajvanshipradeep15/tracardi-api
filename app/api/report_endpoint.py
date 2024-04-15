@@ -13,7 +13,7 @@ from app.api.domain.report_test_payload import ReportTestPayload
 from tracardi.service.report_manager import ReportManager
 
 router = APIRouter(
-    dependencies=[Depends(Permissions(roles=["admin", "developer", "marketer"]))]
+    dependencies=[Depends(Permissions(roles=["admin", "developer"]))]
 )
 
 
