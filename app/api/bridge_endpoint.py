@@ -8,7 +8,8 @@ from tracardi.service.storage.mysql.service.database_service import DatabaseServ
 from tracardi.service.storage.mysql.service.bridge_service import BridgeService
 from tracardi.service.storage.mysql.bootstrap.bridge import os_default_bridges
 from tracardi.service.license import License, LICENSE
-from com_tracardi.db.bootstrap.default_bridges import commercial_default_bridges
+if License.has_service(LICENSE):
+    from com_tracardi.db.bootstrap.default_bridges import commercial_default_bridges
 
 router = APIRouter(
     dependencies=[Depends(Permissions(roles=["admin", "developer"]))]
