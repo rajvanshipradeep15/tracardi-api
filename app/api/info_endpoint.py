@@ -51,9 +51,25 @@ async def get_current_backend_version():
 
     if License.has_license():
         license = License.check()
+
+        # TODO remove after 0.9.0 release
+
         version['owner'] = license.owner
         version['expires'] = datetime.fromtimestamp(license.expires)
         version['licenses'] = list(license.get_service_ids())
+
+        # New license
+
+        version["license"] = {}
+        if license.id:
+            version['license']['id'] = license.id
+        if license.version:
+            version['license']['version'] = license.version
+        version['license']['owner'] = license.owner
+        if license.company:
+            version['license']['company'] = license.company
+        version['license']['expires'] = datetime.fromtimestamp(license.expires)
+        version['license']['services'] = list(license.get_service_ids())
     else:
         version['owner'] = "Tracardi"
         version['expires'] = "Never"
