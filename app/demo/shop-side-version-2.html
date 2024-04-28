@@ -46,7 +46,7 @@
      window.tracker.track(type, props, {"fire": true, "beacon": true});
     }
 
-    window.tracker.track("page-view", {"category": "product-list"});
+    window.tracker.track("page-view", {"category": "product-list"}, {"async": false});
 
         window.onTracardiReady.bind( ({helpers, context, config, tracker}) => {
         var btns = document.querySelectorAll('a[data-modal-id="#add-to-cart"]');
