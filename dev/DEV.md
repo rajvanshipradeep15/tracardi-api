@@ -1,4 +1,7 @@
-docker compose -f dev-docker-compose.yaml up
+opentelemetry-instrument \
+    --service_name tracardi \
+    uvicorn app.main:application --proxy-headers --host 0.0.0.0 --port 8686 --log-level info
+
 
 # Run local server
 
