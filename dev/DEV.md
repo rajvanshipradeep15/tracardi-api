@@ -1,4 +1,7 @@
-docker compose -f dev-docker-compose.yaml up
+opentelemetry-instrument \
+    --service_name tracardi \
+    uvicorn app.main:application --proxy-headers --host 0.0.0.0 --port 8686 --log-level info
+
 
 # Run local server
 
@@ -48,12 +51,14 @@ docker run -p 8787:80 -e API_URL=//127.0.0.1:8686 -e TRACK_DEBUG="yes" tracardi/
 
 # Run local API
 docker run -p 18686:80 \
+-e OTEL_SDK_DISABLED=false \
+-e OTEL_EXPORTER_OTLP_ENDPOINT=http://192.168.1.110:4317 \
 -e ELASTIC_HOST=http://192.168.1.110:9200 \
 -e REDIS_HOST=redis://192.168.1.110:6379 \
 -e MYSQL_HOST=192.168.1.110 \
 -e PULSAR_HOST=pulsar://192.168.1.110:6650 \
 -e LOGGING_LEVEL=info \
-tracardi/com-tracardi-api:0.9.0
+tracardi/com-tracardi-api:0.9.1-dev
 
 # Rabbit mq
 
