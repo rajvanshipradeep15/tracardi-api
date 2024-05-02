@@ -1,5 +1,5 @@
-import logging
 import os
+import logging
 import sys
 import traceback
 from datetime import datetime
