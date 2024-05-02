@@ -51,7 +51,8 @@ docker run -p 8787:80 -e API_URL=//127.0.0.1:8686 -e TRACK_DEBUG="yes" tracardi/
 
 # Run local API
 docker run -p 18686:80 \
--e OTEL_SDK_DISABLED=true \
+-e OTEL_SDK_DISABLED=false \
+-e OTEL_EXPORTER_OTLP_ENDPOINT=http://192.168.1.110:4317 \
 -e ELASTIC_HOST=http://192.168.1.110:9200 \
 -e REDIS_HOST=redis://192.168.1.110:6379 \
 -e MYSQL_HOST=192.168.1.110 \
