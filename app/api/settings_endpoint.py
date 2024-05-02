@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any
 
 from app.api.auth.permissions import Permissions
 from tracardi.config import elastic, redis_config, tracardi, memory_cache, mysql
@@ -507,3 +507,16 @@ async def get_system_settings() -> List[SystemSettings]:
         return system_settings + com_system_settings
 
     return system_settings
+
+
+@router.get("/system/envs", tags=["system"],
+            include_in_schema=tracardi.expose_gui_api,
+            response_model=Dict[str, Any])
+async def get_system_envs() -> Dict[str, Any]:
+    """
+    Lists all system settings
+    """
+    if License.has_license():
+        return system_settings + com_system_settings
+
+    return {item.label: item.value for item in system_settings}
