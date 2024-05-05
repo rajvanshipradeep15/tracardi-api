@@ -16,6 +16,24 @@ interest was last updated. The plugin retrieves timestamps for each interest fro
 interest scores, and then applies a softmax function to normalize these scores. The result highlights the most prominent
 interests relative to others. The top interest along with its probability score is also identified and returned.
 
+### Details
+
+Interest scores are calculated using a decay function, specifically an exponential function that reduces the interest
+magnitude over time. This reduction is based on the formula: magnitude × e^(-decay × time_passed), where "e" represents
+the exponential function. The scores are subsequently normalized with a softmax function, which emphasizes the most
+significant interest by giving it the highest value.
+
+For instance, if the initial interest magnitude is 1 with a decay factor of 0.1, the interest will nearly disappear (
+approach a value of 0) after 14 time units - these units could be seconds, minutes, etc.
+
+In another scenario, if the interest starts with value 10, then after 14 days, it would reduce to approximately 2.46.
+Additionally, there is always a baseline interest labeled "unknown" with a fixed magnitude of 0.5. If any interest's
+magnitude falls below 0.25, its calculated score will then be set to zero.
+
+This plugin is particularly useful when you want to quantify the decline in customer interest over time and identify the
+most current prominent interest. If multiple interests are equally significant, the probability is evenly distributed
+among them. The total probability across all interests will always sum up to 1.
+
 # Inputs and Outputs
 
 - __Inputs__: This plugin requires a payload object as input which includes user profile details necessary for
@@ -34,13 +52,17 @@ interests relative to others. The top interest along with its probability score 
     "reading": 0.6,
     "sports": 0.3
   },
-  "interests": {  # Current interest values
-    "unknown": 0.5,
-    "reading": 7,
-    "sports": 5
-  },
-  "top": "reading",
-  "probability": 0.6
+  "interests": {
+    #
+  Current
+  interest
+  values
+  "unknown": 0.5,
+  "reading": 7,
+  "sports": 5
+},
+"top": "reading",
+"probability": 0.6
 }
 ```
 
