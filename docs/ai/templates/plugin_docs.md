@@ -215,164 +215,170 @@ There is only one, do not use `` in the response. So `some text` is not allowed.
 Here is the full plugin code:
 
 ```python
-import jwt
-import ssl
-import aiohttp
-import certifi
+from dateparser import parse
+from datetime import datetime
 
-from datetime import datetime as date
+import math
+import numpy as np
+from typing import Optional
 
-from tracardi.domain.resources.ghost import GhostResourceCredentials
-from tracardi.service.plugin.domain.register import Plugin, Spec, MetaData, Documentation, PortDoc, Form, FormGroup, \
-    FormField, FormComponent
-from tracardi.service.plugin.domain.result import Result
 from tracardi.service.plugin.runner import ActionRunner
-from tracardi.service.domain import resource as resource_db
-from tracardi.service.tracardi_http_client import HttpClient
-from tracardi.domain.profile import Profile
-from .model.config import Configuration
+from tracardi.service.plugin.domain.register import Plugin, Spec, MetaData, Form, FormGroup, FormField, FormComponent, \
+    Documentation, PortDoc
+from tracardi.service.plugin.domain.result import Result
+from tracardi.service.utils.date import now_in_utc
 
+from .model.configuration import Configuration
 
-def validate(config):
-    print(config)
+def validate(config: dict):
     return Configuration(**config)
 
+# Description:
+# Interest scores use a decay function that is an exponential function that decrease interest magnitude over time. 
+# It is based on the equation magnitude * math.exp(-decay * time_passed_in_time_units). 
+# Scores are then normalized with softmax function that will compute the highest value to the most prominent interest.  
+# 
+# Example when interest magnitude is 1, and decay factor is 0.1 then the interest will disappear (go almost to 0) 
+# after 14 time units (it can be minutes second etc.).
 
-class GhostAction(ActionRunner):
-    credentials: GhostResourceCredentials
+# If the interest is 10 then after 14 days it will be 2.46. 
+# There is always an unknown interest. Its value (magnitude is always: 0.5). If the magnitude of interest 
+# goes below 0.25 the score will 0 then.
+
+class InterestsScoringAction(ActionRunner):
+
     config: Configuration
 
+    @staticmethod
+    def _get_timestamp(interest, fields_timestamps) -> Optional[datetime]:
+        path = f"interests.{interest}"
+        if path in fields_timestamps:
+            try:
+                return parse(fields_timestamps[path][0])
+            except [KeyError, TypeError]:
+                pass
+        return None
+
+    @staticmethod
+    def _time_diff(timestamp: datetime, base: int = 60):
+        return int((now_in_utc() - timestamp).total_seconds() / base)
+
+    @staticmethod
+    def _get_score(value, decay: float, timestamp: datetime, base: int = 60) -> float:
+        score = value * math.exp(-decay * InterestsScoringAction._time_diff(timestamp, base))
+        if score < .25:
+            return 0
+        return score
+
+    @staticmethod
+    def _softmax(scores):
+        exp_scores = np.exp(scores)  # Compute the exponent of each score
+        sum_exp_scores = np.sum(exp_scores)  # Compute the sum of all exponents
+        softmax_scores = exp_scores / sum_exp_scores  # Normalize each score
+        return softmax_scores
+
     async def set_up(self, init):
-        config = validate(init)
-        resource = await resource_db.load(config.resource.id)
-        self.config = config
-        self.credentials = resource.credentials.get_credentials(self, output=GhostResourceCredentials)
+        self.config = validate(init)
 
-    async def run(self, payload: dict, in_edge=None) -> Result:
-        dot = self._get_dot_accessor(payload)
-        profile = Profile(**dot.profile)
+    async def run(self, payload: dict, in_edge=None) -> Optional[Result]:
 
-        try:
-            _id, secret = self.credentials.api_key.split(':')
-        except Exception:
-            message = f"Could not split API key into id and secret. Is the API_KEY ok. It should have : char in its body. Please check the resource configuration."
-            self.console.error(message)
-            return Result(port='error', value={"message": message})
+        fields_timestamps = self.profile.metadata.fields
+        interests = ['unknown']
+        decayed_values =[0.5]
+        for interest in self.profile.interests.keys():
+            timestamp: Optional[datetime] = self._get_timestamp(interest, fields_timestamps)
 
-        iat = int(date.now().timestamp())
-        header = {'alg': 'HS256', 'typ': 'JWT', 'kid': _id}
-        payload = {
-            'iat': iat,
-            'exp': iat + 5 * 60,
-            'aud': '/admin/'
-        }
+            if timestamp is None:
+                timestamp = now_in_utc()
+                path = f"interests.{interest}"
+                self.profile.metadata.fields[path] = [str(now_in_utc()), self.event.id]
+                self.profile.mark_for_update()
 
-        try:
-            token = jwt.encode(payload, bytes.fromhex(secret), algorithm='HS256', headers=header)
-            ssl_context = ssl.create_default_context(cafile=certifi.where())
+            value = self.profile.interests.get(interest)
+            try:
+                time_base = int(self.config.base)
+            except ValueError:
+                time_base = 60
+            score = InterestsScoringAction._get_score(value, self.config.decay, timestamp, time_base)
+            interests.append(interest)
+            decayed_values.append(score)
 
-            async with HttpClient(
-                    1,
-                    200,
-                    headers={'Authorization': 'Ghost {}'.format(token)},
-                    connector=aiohttp.TCPConnector(ssl=ssl_context)
-            ) as client:
-                async with client.get(
-                        url=self.credentials.api_url + '/ghost/api/admin/members/?filter=uuid:' + dot[self.config.uuid]
-                ) as response:
-                    member = await response.json()
+        scores = InterestsScoringAction._softmax(decayed_values)
+        scores = zip(interests, scores)
+        _scores = sorted(scores, reverse=False, key=lambda  x: x[1])
+        scores = {k:v for k, v in _scores}
 
-            ghost_id = member['members'][0]['id']
-            labels = list(map(lambda x: x['name'], list(member['members'][0]['labels'])))
-            labels.sort()
+        decayed_values = zip(interests, decayed_values)
+        decayed_values = {k: v for k, v in decayed_values}
 
-            profile_segments = profile.segments
-            profile_segments.sort()
+        top = _scores.pop()
 
-            if labels == profile_segments:
-                return Result(port='result', value={'labels': labels})
-            labels = profile.segments
-
-            async with HttpClient(
-                    self.node.on_connection_error_repeat,
-                    200,
-                    headers={'Authorization': 'Ghost {}'.format(token)},
-                    connector=aiohttp.TCPConnector(ssl=ssl_context)
-            ) as client:
-                async with client.put(
-                        url=self.credentials.api_url + '/ghost/api/admin/members/' + ghost_id,
-                        json={'members': [{'labels': labels}]}
-                ) as response:
-                    result = await response.json()
-                    if response.status == 200:
-                        return Result(port='result', value={'labels': labels, "response": result})
-                    return Result(port='error', value={"message": result})
-
-        except Exception as e:
-            message = str(e)
-            self.console.error(message)
-            return Result(value={"message": message}, port="error")
+        return Result(port="scoring", value={
+            "scoring": scores,
+            "interests": decayed_values,
+            "top": top[0],
+            "probability": top[1]
+        })
 
 
 def register() -> Plugin:
     return Plugin(
-        start=False,
         spec=Spec(
             module=__name__,
-            className=GhostAction.__name__,
+            className=InterestsScoringAction.__name__,
             inputs=["payload"],
-            outputs=["result", "error"],
+            outputs=['scoring'],
             version='0.9.0',
+            license="Tracardi",
+            author="Risto Kowaczewski",
+            manual="interests_scoring_action",
             init={
-                'resource': {'id': '', 'name': ''},
-                "uuid": ""
+              "decay": 0.1,
+              "base": "60"
             },
             form=Form(groups=[
                 FormGroup(
-                    name="Ghost configuration",
+                    name="Interest decay",
                     fields=[
                         FormField(
-                            id="resource",
-                            name="Ghost Resource",
-                            description="Ghost Resource",
-                            component=FormComponent(type="resource", props={
-                                "label": "Resource",
-                                "tag": "ghost"
-                            })
+                            id="decay",
+                            name="Interest decrease rate over time.",
+                            description="This is the rate at which the interest should decrease over time.",
+                            component=FormComponent(type="text", props={"label": "Decay factor"})
                         ),
                         FormField(
-                            id="uuid",
-                            name="UUID",
-                            description="Ghost member UUID.",
-                            component=FormComponent(type="dotPath", props={
-                                "label": "UUID",
-                                "defaultSourceValue": "payload"
-                            })
+                            id="base",
+                            name="Unit of time",
+                            description="What is the smallest unit of time that should reduce the interest value?",
+                            component=FormComponent(type="select", props={"label": "Time unit", "items": {
+                                1: "Second",
+                                60: "Minute",
+                                60*60: "Hour",
+                                24*60*60: "Day",
+                                30*24*60*60: "Month"
+                            }})
                         )
-                    ])
+                    ]
+                ),
             ]),
-            license="MIT",
-            author="Matt Cameron",
-            manual="ghost"
         ),
         metadata=MetaData(
-            name='Ghost',
-            desc='Adds labels to a Ghost member.',
-            icon='ghost',
-            group=["Connectors"],
-            purpose=['collection'],
+            name='Interest scoring',
+            desc='It calculates a normalized value of interests using the exponential decay over time.',
+            icon='calculator',
+            keywords=['rate', 'score', 'scoring', 'interest'],
+            group=["Segmentation"],
             documentation=Documentation(
                 inputs={
                     "payload": PortDoc(desc="This port takes payload object.")
                 },
                 outputs={
-                    "result": PortDoc(desc="Returns response from Ghost service."),
-                    "error": PortDoc(desc="Returns error message if plugin fails.")
+                    "scoring": PortDoc(desc="Returns scoring for each interest.")
                 }
-            )
+            ),
+            pro=True
         )
     )
-
 
 
 ```
