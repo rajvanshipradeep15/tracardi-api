@@ -118,3 +118,82 @@ To resolve this, create an event source in Tracardi and replace the string <your
 Please notice that there is also the URL of Tracardi backend server. Please replace the IP e.g. `192.168.1.103` with the
 address of your Tracardi server.
 
+## Step 4: Extending with Auto Events and Triggers (optional)
+
+Auto events and triggers provide a streamlined approach to managing event handling in web pages. This documentation outlines the benefits of using auto events, describes how they are configured, and provides guidance on integrating triggers with HTML elements.
+
+At a high level, the primary benefit of using auto events is the centralization of event and trigger definitions. Instead of scattering event handling logic throughout the page, auto events allow for the consolidation of these definitions in one place. This results in improved code organization, readability, and maintainability.
+
+### Key Concepts
+
+1. **Auto Events** - these events are triggered automatically upon page load.
+2. **Auto Triggers** - these triggers are activated in response to user interactions with the page.
+
+### Configuration
+
+Auto events and triggers are configured using a structured format.
+
+Following is an example configuration:
+
+```
+
+        const options = {
+            tracker: {
+                url: {
+                    script: 'http://192.168.1.103:8686/tracker', 
+                    api: 'http://192.168.1.103:8686'
+                },
+                source: {
+                    id: "<your-event-source-id-HERE>"
+                },
+                auto: { // (1)
+                        events: [
+                                ["increase-interest", {"interest": "laptops", "value": 1}],
+                                ["increase-interest", {"interest": "systems", "value": 2}],
+                                ["page-view", {"category": "laptops"}]
+                        ],
+                        triggers: [
+                                {tag:"product", trigger:'onVisible', data: {event: 'image-viewed'}},
+                                {tag:"title", trigger:'onTextSelect', data: {event: 'text-selected'}
+                        ]
+                }
+
+        }
+```
+
+Note:
+* (1) - Optional auto object extends the track options.
+  
+### Usage with Triggers and HTML Elements
+In addition to configuring auto events and triggers in your JavaScript code, you can integrate them with HTML elements using the data-tracardi-tag attribute.
+
+This allows you to specify which elements on the page should trigger events based on user interactions.
+
+#### Steps to Implement:
+
+#### 1 - Define Triggers:
+
+Configure auto triggers in your JavaScript code as described in the previous section.
+
+#### 2 - Add data-tracardi-tag Attribute:
+
+Identify the HTML elements on your page that should trigger events based on user interactions.
+
+Add the data-tracardi-tag attribute to these elements and assign a value corresponding to the desired trigger tag defined in your JavaScript configuration.
+
+For example:
+
+```
+<div data-tracardi-tag="product"> <!-- Content of the div --> </div>
+```
+
+#### 3 - Trigger Events:
+
+When the specified user interaction or condition associated with the trigger occurs on the tagged HTML element, the corresponding event defined in your JavaScript configuration will be triggered.
+
+#### Notes:
+
+1. The value assigned to the data-tracardi-tag attribute should match the tag property specified in your auto trigger configuration.
+2. You can customize the data-tracardi-tag value based on your application's specific requirements and naming conventions.
+3. By integrating triggers with HTML elements using the data-tracardi-tag attribute, you can easily specify which elements should activate events based on user interactions, enabling flexible and targeted event tracking on your web pages.
+
