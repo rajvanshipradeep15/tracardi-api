@@ -16,7 +16,7 @@ router = APIRouter(
 @router.get("/install/reset/{token}", tags=["installation"], include_in_schema=tracardi.expose_gui_api)
 async def reset_installation(token: str):
     """
-    Resets installation
+    This is the full reset  of the installation
     """
 
     if tracardi.installation_token and (tracardi.installation_token=='tracardi' or tracardi.installation_token != token):
