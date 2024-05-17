@@ -423,7 +423,7 @@ system_settings = [
         **{
             "label": "SAVE_LOGS",
             "value": tracardi.save_logs,
-            "desc": "Default: yes. When set to yes all logs will be saved n tracardi log."
+            "desc": "Default: yes. When set to yes all logs will be saved in tracardi log."
         }
     ),
     SystemSettings(
