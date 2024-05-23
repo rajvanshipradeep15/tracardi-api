@@ -264,16 +264,16 @@ async def debug_flow(flow: FlowGraph, event_id: Optional[str] = None):
         else:
             profile = None
 
+        session = None
+        event_session = None
         if event.has_session():
             session = await load_session_from_db(event.session.id)
-            event_session = EventSession(
-                id=session.id,
-                start=session.metadata.time.insert,
-                duration=session.metadata.time.duration
-            )
-        else:
-            session = None
-            event_session = None
+            if session is not None:
+                event_session = EventSession(
+                    id=session.id,
+                    start=session.metadata.time.insert,
+                    duration=session.metadata.time.duration
+                )
 
     tracker_payload = TrackerPayload(
         source=source,
