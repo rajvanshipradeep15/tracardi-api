@@ -137,7 +137,7 @@ Example
 
 To override the session timestamps, you can use the session object. Add additional metadata to define the default values
 that will be used when the session is created. This is particularly useful if you are importing old data or want to pass
-the `create` time from your client.
+the `create` time from your client. `Metadata` is optional.
 
 Example
 
@@ -173,7 +173,7 @@ Example
 
 To override the profile timestamps, you can use the profile object. Add additional metadata to define the default values
 that will be used when the profile is created. This is particularly useful if you are importing old data or want to pass
-the `create` time from your client.
+the `create` time from your client. `Metadata` is optional.
 
 Example
 
