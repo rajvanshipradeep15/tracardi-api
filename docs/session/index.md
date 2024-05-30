@@ -39,9 +39,9 @@ The Session object captures details about a user session, including metadata, pr
 |-----------------------|---------------|------------------------------------------------------|------------------------------------------------------|
 | metadata              | Object        | Metadata about the session.                          |                                                      |
 | ├── time              | Object        | Timestamps and time-related details.                 |                                                      |
-| │   ├── insert        | String        | Timestamp when the session was inserted (at origin). | `"2024-05-30T07:44:23.243135Z"`                      |
-| │   ├── create        | String (nullable) | Timestamp when the session was created.              | `null`                                               |
-| │   ├── update        | String (nullable) | Timestamp when the session was last updated.         | `null`                                               |
+| │   ├── insert        | Date        | Timestamp when the session was inserted (at origin). | `"2024-05-30T07:44:23.243135Z"`                      |
+| │   ├── create        | Date (nullable) | Timestamp when the session was created.              | `null`                                               |
+| │   ├── update        | Date (nullable) | Timestamp when the session was last updated.         | `null`                                               |
 | │   ├── timestamp     | Float         | Unix timestamp of the session.                       | `1717055063.243177`                                  |
 | │   ├── duration      | Integer       | Duration of the session in seconds.                  | `0`                                                  |
 | │   ├── weekday       | Integer       | Weekday of the session (0 = Sunday, 6 = Saturday).   | `3`                                                  |
@@ -49,7 +49,7 @@ The Session object captures details about a user session, including metadata, pr
 | ├── aux               | Object        | Additional metadata.                                 | `{}`                                                 |
 | ├── status            | String        | Status of the session.                               | `"active"`                                           |
 
-#### Operation
+#### Operation (internal use only)
 
 | **Field**      | **Type**      | **Description**                                                                                           | **Example**                                          |
 |----------------|---------------|-----------------------------------------------------------------------------------------------------------|------------------------------------------------------|

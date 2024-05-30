@@ -28,33 +28,33 @@ The Profile object stores detailed information about a user's profile, including
 
 #### Metadata
 
-| **Field**             | **Type**      | **Description**                                           | **Example**                                          |
-|-----------------------|---------------|-----------------------------------------------------------|------------------------------------------------------|
-| metadata              | Object        | Metadata about the profile.                               |                                                      |
-| ├── time              | Object        | Timestamps and visit details.                             |                                                      |
-| │   ├── insert        | String        | Timestamp when the profile was inserted (origin).         | `"2024-05-30T07:44:23.246262+00:00"`                 |
-| │   ├── create        | String        | Timestamp when the profile was created.                   | `"2024-05-30T07:44:23.246262+00:00"`                 |
-| │   ├── update        | String        | Timestamp when the profile was last updated.              | `"2024-05-30T07:44:28.291207+00:00"`                 |
-| │   ├── segmentation  | Object (nullable) | Custom segmentation data.                                 | `null`                                               |
-| │   ├── visit         | Object        | Visit details.                                            |                                                      |
-| │   │   ├── last      | String (nullable) | Last visit timestamp.                                     | `null`                                               |
-| │   │   ├── current   | String        | Current visit timestamp.                                  | `"2024-05-30T07:44:23.255056+00:00"`                 |
-| │   │   ├── count     | Integer       | Number of visits.                                         | `1`                                                  |
-| │   │   ├── tz        | String (nullable) | Time zone.                                                | `null`                                               |
-| ├── aux               | Object        | Additional metadata.                                      | `{}`                                                 |
-| ├── status            | String (nullable) | Profile status.                                           | `null`                                               |
-| ├── fields            | Object        | Custom metadata fields.                                   |                                                      |
-| │   ├── metadata.time.visit.current | Array         | Array with current visit timestamp and a secondary value. | `[1717055063.2550735, null]`                         |
-| │   ├── metadata.time.visit.count   | Array         | Array with visit count and a secondary value.             | `[1717055063.255081, null]`                          |
-| ├── system            | Object        | System-related metadata.                                  |                                                      |
-| │   ├── integrations  | Object        | Integration details.                                      | `{}`                                                 |
-| │   ├── aux           | Object        | Additional system metadata.                               | `{}`                                                 |
+| **Field**            | **Type**      | **Description**                                    | **Example**                                          |
+|----------------------|---------------|----------------------------------------------------|------------------------------------------------------|
+| metadata             | Object        | Metadata about the profile.                        |                                                      |
+| ├── time             | Object        | Timestamps and visit details.                      |                                                      |
+| │   ├── insert       | Date        | Timestamp when the profile was inserted (origin).  | `"2024-05-30T07:44:23.246262+00:00"`                 |
+| │   ├── create       | Date        | Timestamp when the profile was created.            | `"2024-05-30T07:44:23.246262+00:00"`                 |
+| │   ├── update       | Date        | Timestamp when the profile was last updated.       | `"2024-05-30T07:44:28.291207+00:00"`                 |
+| │   ├── segmentation | Date (nullable) | Custom segmentation data.                          | `null`                                               |
+| │   ├── visit        | Object        | Visit details.                                     |                                                      |
+| │   │   ├── last     | String (nullable) | Last visit timestamp.                              | `null`                                               |
+| │   │   ├── current  | String        | Current visit timestamp.                           | `"2024-05-30T07:44:23.255056+00:00"`                 |
+| │   │   ├── count    | Integer       | Number of visits.                                  | `1`                                                  |
+| │   │   ├── tz       | String (nullable) | Time zone.                                         | `null`                                               |
+| ├── aux              | Object        | Additional metadata.                               | `{}`                                                 |
+| ├── status           | String (nullable) | Profile status.                                    | `null`                                               |
+| ├── fields           | Object        | Timestamps of field's updates.                     |                                                      |
+| │   ├── field-name1  | Array         | Array with change timestamp and a secondary value. | `[1717055063.2550735, null]`                         |
+| │   ├── field-name2  | Array         | Array with change timestamp and a secondary value. | `[1717055063.255081, null]`                          |
+| ├── system           | Object        | System-related metadata.                           |                                                      |
+| │   ├── integrations | Object        | Integration details.                               | `{}`                                                 |
+| │   ├── aux          | Object        | Additional system metadata.                        | `{}`                                                 |
 
 #### Identifiers
 
-| **Field**      | **Type**      | **Description**                                                                                           | **Example**                                          |
-|----------------|---------------|-----------------------------------------------------------------------------------------------------------|------------------------------------------------------|
-| ids            | Array         | List of identifiers for the profile.                                                                       | `["4e63bb5b-8ec4-498f-ba63-8af1aedeb691"]`           |
+| **Field**      | **Type**      | **Description**                                             | **Example**                                          |
+|----------------|---------------|-------------------------------------------------------------|------------------------------------------------------|
+| ids            | Array         | List of identifiers for the profile from different devices. | `["4e63bb5b-8ec4-498f-ba63-8af1aedeb691"]`           |
 
 #### Statistics
 
@@ -73,9 +73,9 @@ The Profile object stores detailed information about a user's profile, including
 
 #### Segments
 
-| **Field**      | **Type**      | **Description**                                                                                           | **Example**                                          |
-|----------------|---------------|-----------------------------------------------------------------------------------------------------------|------------------------------------------------------|
-| segments       | Array         | List of segments the profile belongs to.                                                                  | `[]`                                                 |
+| **Field**      | **Type**      | **Description**                              | **Example**                                          |
+|----------------|---------------|----------------------------------------------|------------------------------------------------------|
+| segments       | Array         | List of segment tags the profile belongs to. | `[]`                                                 |
 
 #### Interests
 
@@ -175,21 +175,21 @@ The Profile object stores detailed information about a user's profile, including
 
 #### Devices
 
-| **Field**      | **Type**      | **Description**                                                                                           | **Example**                                          |
-|----------------|---------------|-----------------------------------------------------------------------------------------------------------|------------------------------------------------------|
-| devices        | Object        | Information about the devices associated with the profile.                                                |                                                      |
-| ├── push       | Array         | List of push notification devices.                                                                         | `[]`                                                 |
-| ├── other      | Array         | Other devices.                                                                                            | `[]`                                                 |
-| ├── last       | Object        | Information about the last used device.                                                                   |                                                      |
-| │   ├── geo    | Object        | Geographic information related to the last used device.                                                   |                                                      |
-| │   │   ├── country | Object        | Country information.                                                                                      |                                                      |
+| **Field**      | **Type**          | **Description**                                                                                           | **Example**                                          |
+|----------------|-------------------|-----------------------------------------------------------------------------------------------------------|------------------------------------------------------|
+| devices        | Object            | Information about the devices associated with the profile.                                                |                                                      |
+| ├── push       | Array             | List of push notification devices.                                                                         | `[]`                                                 |
+| ├── other      | Array             | Other devices.                                                                                            | `[]`                                                 |
+| ├── last       | Object            | Information about the last used device.                                                                   |                                                      |
+| │   ├── geo    | Object            | Geographic information related to the last used device.                                                   |                                                      |
+| │   │   ├── country | Object            | Country information.                                                                                      |                                                      |
 | │   │   │   ├── name  | String (nullable) | Country name.                                                                                             | `null`                                               |
 | │   │   │   ├── code  | String (nullable) | Country code.                                                                                             | `null`                                               |
 | │   │   ├── city     | String (nullable) | City.                                                                                                    | `null`                                               |
 | │   │   ├── county   | String (nullable) | County.                                                                                                  | `null`                                               |
 | │   │   ├── postal   | String (nullable) | Postal code.                                                                                             | `null`                                               |
-| │   │   ├── latitude | String (nullable) | Latitude.                                                                                                | `null`                                               |
-| │   │   ├── longitude| String (nullable) | Longitude.                                                                                               | `null`                                               |
+| │   │   ├── latitude | Number (nullable) | Latitude.                                                                                                | `null`                                               |
+| │   │   ├── longitude| Number (nullable) | Longitude.                                                                                               | `null`                                               |
 | │   │   ├── location | String (nullable) | Specific location information.                                                                           | `null`                                               |
 
 #### Media
@@ -242,14 +242,14 @@ The Profile object stores detailed information about a user's profile, including
 
 #### Loyalty
 
-| **Field**      | **Type**      | **Description**                                                                                           | **Example**                                          |
-|----------------|---------------|-----------------------------------------------------------------------------------------------------------|------------------------------------------------------|
-| loyalty        | Object        | Loyalty-related information.                                                                              |                                                      |
-| ├── codes      | Array         | List of loyalty codes.                                                                                    | `[]`                                                 |
-| ├── card       | Object        | Loyalty card details.                                                                                     |                                                      |
+| **Field**      | **Type**          | **Description**                                                                                           | **Example**                                          |
+|----------------|-------------------|-----------------------------------------------------------------------------------------------------------|------------------------------------------------------|
+| loyalty        | Object            | Loyalty-related information.                                                                              |                                                      |
+| ├── codes      | Array             | List of loyalty codes.                                                                                    | `[]`                                                 |
+| ├── card       | Object            | Loyalty card details.                                                                                     |                                                      |
 | │   ├── id     | String (nullable) | Loyalty card ID.                                                                                           | `null`                                               |
 | │   ├── name   | String (nullable) | Loyalty card name.                                                                                         | `null`                                               |
 | │   ├── issuer | String (nullable) | Loyalty card issuer.                                                                                       | `null`                                               |
-| │   ├── expires| String (nullable) | Loyalty card expiration date.                                                                              | `null`                                               |
-| │   ├── points | Integer       | Loyalty points.                                                                                           | `0`                                                  |
+| │   ├── expires| Date (nullable)   | Loyalty card expiration date.                                                                              | `null`                                               |
+| │   ├── points | Integer           | Loyalty points.                                                                                           | `0`                                                  |
 
