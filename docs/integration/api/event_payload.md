@@ -56,14 +56,17 @@ The specific part related to events is as follows:
 
 The Event Payload consists of the following attributes:
 
-| Attribute   | Type                   | Description                                     |
-|-------------|------------------------|-------------------------------------------------|
-| type        | str                    | Type or category of the event                   |
-| time        | Optional[Time]         | Timestamp information for the event (optional)  |
-| properties  | Optional[dict]         | Properties associated with the event (may be empty) |
-| options     | Optional[dict]         | Additional options for the event (may be empty)     |
-| context     | Optional[dict]         | Additional context data for the event (may be empty)|
-| tags        | Optional[list]         | Tags associated with the event (optional)       |
+| Attribute  | Type           | Description                                          |
+|------------|----------------|------------------------------------------------------|
+| type       | str            | Type or category of the event                        |
+| source     | dict           | Source object (required)                             |
+| session    | dict           | Session object (required)                            |
+| profile    | dict           | Profile object (required)                            |
+| time       | Optional[Time] | Timestamp information for the event (optional)       |
+| properties | Optional[dict] | Properties associated with the event (may be empty)  |
+| options    | Optional[dict] | Additional options for the event (may be empty)      |
+| context    | Optional[dict] | Additional context data for the event (may be empty) |
+| tags       | Optional[list] | Tags associated with the event (optional)            |
 
 The `Time` attribute, used within the `time` field, has the following structure:
 
@@ -76,13 +79,15 @@ The `Time` class provides timestamp information for the event, with the followin
 If the `insert` attribute is not provided explicitly, it defaults to the current UTC datetime at the time of
 instantiation.
 
+Example
+
 ## Usage
 
 ### Event type
 
 Define event type as slug of its name. For example if the event type is `Page View` set `type` to `page-view`.
 
-### Time
+### Events Default Times
 
 To send an event, you can populate the attributes described above according to your specific event data. If you wish to
 override the current insert time, which represents the time of event collection, and instead use a custom time, you can
@@ -94,6 +99,111 @@ times.
 
 By customizing the `time` attributes, you can have more control over the temporal aspects associated with the event,
 ensuring accurate representation within your event tracking system.
+
+Example
+
+```json title="Example of track data payload with event times" linenums="1" hl_lines="21-23"
+{
+  "source": {
+    "id": "Source ID"
+  },
+  "session": {
+    "id": "Session ID"
+  },
+  "profile": {
+    "id": "Profile ID"
+  },
+  "context": {
+    // Context data
+  },
+  "properties": {},
+  "events": [
+    {
+      "type": "event-type",
+      "properties": {
+        // Event properties
+      },
+      "time": {
+        "create": "2023-01-01 00:00:00", "insert": "2023-01-01 00:00:01", "update": "2024-01-01 00:00:01"
+      }
+    },
+    ...
+  ],
+  "options": {}
+}
+```
+
+### Session Default Times
+
+To override the session timestamps, you can use the session object. Add additional metadata to define the default values
+that will be used when the session is created. This is particularly useful if you are importing old data or want to pass
+the `create` time from your client.
+
+Example
+
+
+```json title="Example of track data payload with session times" linenums="1" hl_lines="7-9"
+{
+  "source": {
+    "id": "Source ID"
+  },
+  "session": {
+    "id": "Session ID",
+     "metadata": {
+        "create": "2023-01-01 00:00:00", "insert": "2023-01-01 00:00:01", "update": "2024-01-01 00:00:01"
+     }
+  },
+  "profile": {
+    "id": "Profile ID"
+  },
+  "properties": {},
+  "events": [
+    {
+      "type": "event-type",
+      "properties": {
+        // Event properties
+      }
+    },
+    ...
+  ]
+}
+```
+
+### Profile Default Times
+
+To override the profile timestamps, you can use the profile object. Add additional metadata to define the default values
+that will be used when the profile is created. This is particularly useful if you are importing old data or want to pass
+the `create` time from your client.
+
+Example
+
+
+```json title="Example of track data payload with profile times" linenums="1" hl_lines="10-12"
+{
+  "source": {
+    "id": "Source ID"
+  },
+  "session": {
+    "id": "Session ID"
+  },
+  "profile": {
+    "id": "Profile ID", 
+    "metadata": {
+        "create": "2023-01-01 00:00:00", "insert": "2023-01-01 00:00:01", "update": "2024-01-01 00:00:01"
+     }
+  }, 
+  "properties": {},
+  "events": [
+    {
+      "type": "event-type",
+      "properties": {
+        // Event properties
+      }
+    },
+    ...
+  ]
+}
+```
 
 ### Properties
 
@@ -139,11 +249,11 @@ some examples of what can be included as event options:
 
 Here is the description of the configuration options in a table format:
 
-| Option      | Description                                                                                                                                               |
-|-------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| saveEvent   | Determines whether the event should be saved or treated as ephemeral. If set to `false`, the event is processed but not permanently saved.                    |
+| Option      | Description                                                                                                                                                |
+|-------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| saveEvent   | Determines whether the event should be saved or treated as ephemeral. If set to `false`, the event is processed but not permanently saved.                 |
 | saveSession | Specifies whether the session associated with the event should be saved. If set to `false`, the session data will not be stored for this particular event. |
-| debugger    | Controls the inclusion of debugger information in the event response. If set to `false`, debugger information will not be returned.                          |
+| debugger    | Controls the inclusion of debugger information in the event response. If set to `false`, debugger information will not be returned.                        |
 
 ### Tags
 
