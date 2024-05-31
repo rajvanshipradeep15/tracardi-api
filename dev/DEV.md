@@ -61,7 +61,7 @@ docker run -p 18686:80 \
 tracardi/com-tracardi-api:0.9.1-dev
 
 # Rabbit mq
-
+sq
 docker run -p 15672:15672 -p 5672:5672 --hostname my-rabbit-2 --name some-rabbit-2 rabbitmq:3-management
 
 
