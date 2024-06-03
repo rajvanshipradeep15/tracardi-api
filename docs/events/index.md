@@ -73,3 +73,10 @@ ensuring that events for a specific profile are processed in a specific order. E
 one profile are processed sequentially, while events for other profiles are processed sequentially but in parallel to
 each other.
 
+## Event timestamps 
+
+The Event object has three dates, similar to the profile and session objects:
+
+1. **Create Date:** This indicates when the event was created on the client side (origin). If this date is not provided, it will remain empty.
+2. **Insert Date:** This indicates when the event arrived in the system and was inserted into the database.
+3. **Update Date:** This indicates when the event was last updated.
