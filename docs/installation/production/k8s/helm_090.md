@@ -1,9 +1,9 @@
-## Tracardi Installation with HelmChart version 0.9.0
+# Tracardi Installation with HelmChart version 0.9.0
 
 This document provides comprehensive instructions for installing the commercial Tracardi application on a Kubernetes (
 K8s) cluster using the Helm chart.
 
-### Prerequisites
+## Prerequisites
 
 Before initiating the installation process, ensure you have completed the following prerequisites:
 
@@ -13,18 +13,13 @@ Before initiating the installation process, ensure you have completed the follow
    archive. Extract the contents of this archive into a folder named "tracardi". You will also receive a Docker Hub
    login token, which is required to access the commercial Docker images. Additionally, make sure you have the Tracardi
    license key.
+3. [Install dependencies](../dependencies/index.md)
 
-### Introduction
+## Introduction
 
 When installing Tracardi using HelmCharts, you can customize the deployment by providing your own `values.yaml` file.
 This file overrides the default values defined in the HelmChart, allowing you to tailor the installation to meet your
 specific needs.
-
-### Custom Values File
-
-Your custom `values.yaml` file will contain only the values you wish to change from the defaults. Any values not
-specified in your custom file will use the defaults provided by the HelmChart. This approach keeps your configuration
-concise and easy to manage.
 
 ### Advice on Setting Up Dependencies
 
@@ -37,71 +32,31 @@ namespaces. This strategy has several advantages:
 3. **Avoiding In-Place Upgrades**: Placing everything in one namespace would necessitate an in-place upgrade for
    Tracardi, which is not recommended due to the increased risk of disruptions and complications.
 
-### Namespace Setup Example
-
-Here is an example of how you might set up namespaces for each service:
-
 ## Dependencies Installation
 
-Tracardi dependencies can be installed using installation scripts. Provided script may need changes for proper scalling.
+Please refer to [dependencies installation](../dependencies/index.md) for instructions.
 
-## Prerequisites
+## Overall process description
 
-* kubectl 1.21 or higher, compatible with your cluster (+/- 1 minor release from your cluster)
-* Helm v3 (3.10.0 or higher)
-* A Kubernetes cluster, version 1.21 or higher.
+The installation takes the following steps:
 
-## Install Dependencies Using Helm Scripts
+* Dependencies installation
+* Init script for dependencies setup (it is part of the tracardi pod)
+* API/GUI and workers installation
 
-Tracardi depends on:
+# Installation settings
 
-- Elasticsearch
-- Apache Pulsar
-- Redis
-- Mysql (Percona)
+## Local installation settings
 
-### Install Elasticsearch
+To customize your installation create local `values.yaml` file and define custom setting for your setup.
 
-```
-cd argocd
-bash ./elastic-install-operator.sh
-bash ./elastic-install-helm.sh
-```
+Your custom `values.yaml` file will contain only the values you wish to change from the defaults. Any values not
+specified in your custom file will use the defaults provided by the HelmChart. This approach keeps your configuration
+concise and easy to manage.
 
-To customize installation values go to: elastic/local-values.yaml
+## Configuration of Services Used by Tracardi
 
-### Install Apache Pulsar
-
-```
-cd argocd
-bash ./pulsar-install-helm.sh
-```
-
-To customize installation values go to: pulsar/local-values.yaml
-
-### Install Redis
-
-```
-cd argocd
-bash ./redis-install-repo.sh
-bash ./redis-install-helm.sh
-```
-
-To customize installation values go to: redis/local-values.yaml
-
-### Install Percona
-
-```
-cd argocd
-bash ./percona-install-repo.sh
-bash ./percona-install-helm.sh
-```
-
-To customize installation values go to: percona/local-values.yaml
-
-## Infrastructure Configuration for Various Services Used by Tracardi
-
-Infrastructure installation is the part in helm configuration that defines all the services that Tracardi needs to connect to. 
+Dependencies configuration is the part in helm configuration that defines all the services that Tracardi needs to connect to. 
 
 ### Elasticsearch Configuration
 
