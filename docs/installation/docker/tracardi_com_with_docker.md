@@ -1,4 +1,4 @@
-# Docker-based Tracardi Installation
+# Docker-based Tracardi Commercial Installation
 
 Make sure you have docker installed on your system.
 
@@ -42,10 +42,18 @@ source .env-docker
 Pull and run Tracardi backend.
 
 ```bash
-docker run -p 8686:80 -e ELASTIC_HOST=http://<your-elastic-ip>:9200 -e REDIS_HOST=redis://<your-redis-ip>:6379 tracardi/com-tracardi-api:<last-version> #(1)
+docker run -p 8686:80 \
+-e LICENSE=xxx \
+-e ELASTIC_HOST=http://<elastic-ip>:9200 \
+-e REDIS_HOST=redis://<redis-ip>:6379 \
+-e MYSQL_HOST=<mysql-ip> \
+-e PULSAR_HOST=pulsar://<pulsar-ip>:6650 \
+-e PULSAR_API=http://<pulsar-ip>:8080 \
+-e LOGGING_LEVEL=info \
+tracardi/com-tracardi-api:<last-version> #(1)
 ```
 
-1. Replace <your-elastic-ip> with your elastic IP. Do the same with <your-redis-ip>. Replace <last-version> with the latest version. Do not use latest.
+1. Replace `<elastic-ip>` with your elastic IP. Do the same with `<redis-ip>`. Replace <last-version> with the latest version. Do not use latest.
 
 Tracardi must connect to elasticsearch. To do that you have to set ELASTIC_HOST variable to reference your elasticsearch
 instance.

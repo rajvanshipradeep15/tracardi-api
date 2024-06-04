@@ -2,23 +2,21 @@
 
 This is the list services/dockers for production ready Tracardi installation.
 
-Service    | Description
------| -------------
-GUI    | Not exposed to the internet, VPN only.
-Collector API    | Exposed to the internet, limited to collecting data only, no GUI.
-Production API    | Not exposed to the internet, VPN only, access to production data.
-Staging API    | Not exposed to the internet, VPN only, access to test data.
-Scheduler    | Service for rescheduling delayed events.
-Scheduler Worker    | Service responsible for executing delayed events.
-Segmentation Job    | Periodically runs and checks for profiles to run through segmentation process.
-Segmentation Worker    | Runs defined segmentation process.
-Trigger Worker    | Runs when a profile is segmented and a workflow should be triggered.
-Update and Migration    | Set of workers for system migration and data import.
-Bridges    | Services for collecting data from different channels, bridges transportation protocol to Tracardi event source.
+Service    | Description                                                                                                               |
+-----------|---------------------------------------------------------------------------------------------------------------------------|
+Init | Installation script.                                                                                                      |
+GUI        | Not exposed to the internet, VPN only.                                                                                    |
+Public API | Exposed to the internet, limited to collecting data only, no GUI.                                                         |
+Private API| Not exposed to the internet, VPN only, allows control of tracardi and its data.                                           |
+Background Worker    | Runs defined background process.                                                                                          |
+APM | Automatic profile merging worker.                                                                                         |
+TMS | Tracardi Tenant Managemetn System. Needed for multitenant setups.                                                         |
+Update and Migration    | Set of workers for system migration and data import.                                                                      |
+Bridges    | Optional. Services for collecting data from different channels, bridges transportation protocol to Tracardi event source. | 
 
 ## Collector API
 
-The Collector API is the API that should be exposed to the internet. It has a limited API function that is designed
+The Public API is the API that should be exposed to the internet. It has a limited API function that is designed
 specifically for collecting data. No GUI-like operations are available.
 
 ### Access:
@@ -43,7 +41,7 @@ allowed to access the production data through this API.
 
 This API is not exposed to the internet, and access to production data is restricted to authorized users only.
 
-## Staging API
+## Private API
 
 The Staging API is the API that should not be exposed to the internet. It has API functions that provide access to test
 data. Access to this server should be limited to people working on data orchestration.
@@ -58,44 +56,9 @@ server.
 This API is not exposed to the internet, and access to test data is restricted to personnel working on data
 orchestration.
 
-## Scheduler
+## Background Worker
 
-The Scheduler is a service that reschedules the execution of delayed events. A delayed event occurs when a workflow
-pauses and resumes after some time.
-
-### Functionality:
-
-The Scheduler is responsible for rescheduling the execution of delayed events in the system.
-
-## Scheduler Worker
-
-The Scheduler Worker is a service that is responsible for executing the delayed events. A delayed event occurs when a
-workflow pauses and resumes after some time.
-
-### Functionality:
-
-The Scheduler Worker is responsible for executing the delayed events in the system.
-
-## Segmentation Job
-
-The Segmentation Job is a job that runs periodically and checks if some profiles should be run through a segmentation
-process.
-
-### Functionality:
-
-The Segmentation Job runs periodically and checks for profiles that need to be run through the segmentation process.
-
-## Segmentation Worker
-
-The Segmentation Worker runs a defined segmentation process.
-
-### Functionality:
-
-The Segmentation Worker is responsible for running the defined segmentation process in the system.
-
-## Trigger Worker
-
-The Trigger Worker runs every time a profile is added to the segment and there is a defined workflow that should be triggered.
+The Background Worker handles all background tasks, including triggering predefined workflows, storing events, and other similar jobs.
 
 ## Update and Migration
 
@@ -107,7 +70,7 @@ The Update and Migration workers are responsible for various tasks such as syste
 
 ## Bridges
 
-The Bridges are services responsible for collecting data from different channels. They bridge the defined transportation
+This service is optional. The Bridges are services responsible for collecting data from different channels. They bridge the defined transportation
 protocol to tracardi event source.
 
 ### Functionality:

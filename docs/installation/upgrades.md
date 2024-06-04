@@ -1,4 +1,4 @@
-# Tracardi Upgrades
+# Tracardi Upgrades before version 0.9.0
 
 This documentation provides information on how to upgrade Tracardi and perform data migration between versions. It also
 covers the process of updating the system and the precautions to take during the upgrade process.
@@ -9,7 +9,7 @@ Tracardi is still in active development, and upgrading to a new version may intr
 changes in workflow persistence. Workflows created in one version may not work properly with all available plugins in a
 newer version, or the plugins may behave differently.
 
-To upgrade the source to the latest development version, pull the new docker image:
+To upgrade the open-source version of Tracardi to the latest development version, pull the new docker image:
 
 ```bash
 docker pull tracardi/tracardi-api:<version>

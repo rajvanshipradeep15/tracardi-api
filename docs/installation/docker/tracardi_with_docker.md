@@ -1,4 +1,4 @@
-# Docker-based Tracardi Installation
+# Docker-based Tracardi Open-Source Installation
 
 Make sure you have docker installed on your system.
 
@@ -15,7 +15,10 @@ Make sure you have docker installed on your system.
 Pull and run Tracardi backend.
 
 ```bash
-docker run -p 8686:80 -e ELASTIC_HOST=http://<your-laptop-ip>:9200 -e REDIS_HOST=redis://<your-laptop-ip>:6379 tracardi/tracardi-api:<last-version> #(1)
+docker run -p 8686:80 \
+-e ELASTIC_HOST=http://<your-laptop-ip>:9200 \
+-e REDIS_HOST=redis://<your-laptop-ip>:6379 \
+tracardi/tracardi-api:<last-version> #(1)
 ```
 
 1. Replace <your-laptop-ip> with your local laptop IP. Replace <last-version> with the latest version. Do not use latest.

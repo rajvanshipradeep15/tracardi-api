@@ -6,9 +6,10 @@ Tracardi depends on:
 
 * Redis
 * Elastic search
+* Apache Pulsar
+* MySql
 
-Elasticsearch and Redis setup in Tracardi goes beyond its configuration. Utilize cloud instances or on-premises
-installation. Refer to manuals for guidance.
+Please install the above services before-hand. 
 
 ## Installation best practises
 
@@ -68,10 +69,6 @@ Q: __Do tracardi need any particular routing inside cluster?__
 A: The internal routing from load balancer to Tracardi instances can be for example: round-robin. Tracardi do not
 require long-lasting sticky sessions.
 
-Q: __What load can take Tracardi?__
-A: We conducted tests with a single Tracardi instance comprising 10 API replicas linked to one Elasticsearch instance.
-Each replica was configured to use a maximum of 0.5 CPU and 150MB of RAM. The setup managed to handle 3000 requests per
-second effectively.
 
 
 

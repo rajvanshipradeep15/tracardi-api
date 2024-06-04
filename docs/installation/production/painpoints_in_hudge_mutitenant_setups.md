@@ -3,7 +3,7 @@
 When operating Tracardi in environments with a large number of tenants (over 100), several significant challenges arise:
 
 1. **Index Capacity in Elasticsearch**: By its default settings, Elasticsearch (ES) can support up to 1000 indices.
-   However, given that Tracardi, version prior 0.9.0, allocates approximately 100 indices per tenant, this limit can be reached rapidly as the number
+   However, given that Tracardi, version prior 0.9.0, allocates approximately 16 indices per tenant, this limit can be reached rapidly as the number
    of tenants grows. It necessitates adjustments to Elasticsearch configurations to accommodate a greater number of
    indices.
 

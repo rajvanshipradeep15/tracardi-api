@@ -28,10 +28,7 @@ The installation of open-source version of Tracardi has the following steps:
 3. **[Workers Installation](../workers/installation.md):** Workers are parts of the Tracardi
    system responsible for handling updates, segmentation, triggers, and maintenance tasks.
 
-4. **[Jobs Installation](../jobs/index.md):** Jobs are parts of the Tracardi
-   system responsible for triggering jobs for workers.
-
 ## Kubernetes' installation with helm
 
 
-1. **[Installation with Helm on K8S](../production/k8s/helm.md):** Automates installation of all required Tracardi components.
+1. **[Installation with Helm on K8S](../production/k8s/helm_082):** Automates installation of all required Tracardi components.

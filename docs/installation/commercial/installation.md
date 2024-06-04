@@ -13,7 +13,7 @@ information will be sent to you after purchase of the commercial license.
 
 Tracardi needs tha following systems:
 
-* Database: Elasticsearch
+* Database: Elasticsearch, Mysql
 * Cache: Redis
 * Queue: Apache Pulsar
 
@@ -31,9 +31,3 @@ The installation of open-source version of Tracardi has the following steps:
 3. **[Workers Installation](../workers/installation.md):** Workers are parts of the Tracardi
    system responsible for handling updates, segmentation, triggers, and maintenance tasks.
 
-4. **[Jobs Installation](../jobs/index.md):** Jobs are parts of the Tracardi
-   system responsible for triggering jobs for workers.
-
-## Kubernetes' installation with helm
-
-Soon to be released

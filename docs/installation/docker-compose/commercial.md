@@ -31,15 +31,32 @@ source .env-docker
 
 ```bash
 git clone https://github.com/Tracardi/tracardi-api.git
+cd tracardi-api
+git checkout 0.9.0
 ```
 
-## Run docker compose
+## Run docker compose (Dependencies)
 
 Go to TRACARDI API folder, and run one line command:
 
 ```bash
-cd tracardi-api
-docker-compose -f com-docker-compose.yaml up
+docker-compose -f com-dep-docker-compose.yaml up
+```
+
+!!! Note
+
+    To run docker compose in the background add `-d` to the command above.
+
+!!! Warning
+
+    Installed dependencies with the above docker compose may not have properly set storages so restarting will cause DATA LOSS.
+
+## Run docker compose (Tracardi)
+
+Go to TRACARDI API folder, and run one line command:
+
+```bash
+docker-compose -f com-app-docker-compose.yaml up
 ```
 
 !!! Note
@@ -68,13 +85,14 @@ docker-compose -f com-docker-compose.yaml up
    To upgrade to the latest version, fetch the latest Docker images for the components. Run the following commands in your terminal:
 
    ```bash
-   docker pull tracardi/tracardi-api:0.8.1
-   docker pull tracardi/tracardi-gui:0.8.1
-   docker pull tracardi/update-worker:0.8.1
-   docker pull tracardi/com-tracardi-segmentation-worker:0.8.1
-   docker pull tracardi/com-tracardi-scheduler-worker:0.8.1
-   docker pull tracardi/com-tracardi-coping-worker:0.8.1
-   docker pull tracardi/com-tracardi-trigger-worker:0.8.1
+   docker pull tracardi/tracardi-api:0.9.0.4
+   docker pull tracardi/tracardi-gui:0.9.0.4
+   docker pull tracardi/update-worker:0.9.0.4
+   docker pull tracardi/com-tracardi-api:0.9.0.4
+   docker pull tracardi/amp:0.9.0.4
+   docker pull tracardi/tms:0.9.0.4
+   docker pull tracardi/background-worker:0.9.0.4
+   docker pull tracardi/init:0.9.0.4
    ```
 
 ## Handling Errors

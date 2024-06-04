@@ -6,20 +6,41 @@ them up.
 
 ## Open-source workers
 
-### 1. Migration and Import Worker
+### 1. Migration and Update Worker
 
-The Migration and Import Worker is responsible for system upgrades and data import tasks, which are carried out in the
+The Migration and Update Worker is responsible for system upgrades and data import tasks, which are carried out in the
 background. It ensures a seamless transition when updating the Tracardi system and handles data imports efficiently.
 
-To run the Migration and Import Worker, execute the following Docker command:
+To run the Migration and Update Worker, execute the following Docker command:
 
 ```bash
 docker run \
+-e ELASTIC_HOST=http://<elasitc-ip>:9200 \
 -e REDIS_HOST=redis://<redis-ip>:6379 \
-tracardi/update-worker:0.8.1
+-e MYSQL_HOST=<mysql-ip> \
+tracardi/update-worker:0.9.0
 ```
 
-Please ensure that you replace `<redis-ip>` with the actual IP address of your Redis instance.
+Please ensure that you replace `<...-ip>` with the actual IP address of your service instance.
+
+
+### 2. Automatic Profile Merging Worker (APM)
+
+The APM Worker is responsible for auto merging profiles with the same emails.
+
+To run the APM Worker, execute the following Docker command:
+
+```bash
+docker run \
+-e ELASTIC_HOST=http://<elasitc-ip>:9200 \
+-e REDIS_HOST=redis://<redis-ip>:6379 \
+-e MYSQL_HOST=<mysql-ip> \
+-e MODE=worker \
+-e PAUSE=5 \
+tracardi/apm:0.9.0.4
+```
+
+Please ensure that you replace `<...-ip>` with the actual IP address of your service instance.
 
 ## Commercial workers
 
@@ -46,58 +67,53 @@ set -a
 source .env-docker
 ```
 
-### 2. Segmentation and Mapping
+### 1. Init script
 
-The Commercial Worker for Segmentation, Post-Collection Event Mapping, and Post-Collection Profile Mapping plays a vital
-role in processing commercial tasks, including segmentation (both workflow and conditional) and mapping events and
-profiles after collection.
+Before you run any commercial docker please make sure that all dependencies are running and you start init script:
+
+```bash
+docker run \
+-e LICENSE=xxx \
+-e ELASTIC_HOST=http://<elastic-ip>:9200 \
+-e REDIS_HOST=redis://<redis-ip>:6379 \
+-e MYSQL_HOST=<mysql-ip> \
+-e PULSAR_HOST=pulsar://<pulsar-ip>:6650 \
+-e PULSAR_API=http://<pulsar-ip>:8080 \
+-e LOGGING_LEVEL=info \
+tracardi/init:0.9.0.4
+```
+
+### 2. Tenant Management System (TMS)
+
+The Tenant Management System (TMS) is a dedicated microservice responsible for managing various aspects related to tenants within a system or platform, particularly in a multi-tenant environment. I
 
 To run this worker, execute the following Docker command:
 
 ```bash
-docker run \
--e ELASTIC_HOST=http://<elastic-ip>:9200 \
--e REDIS_HOST=redis://<redis-ip>:6379 \
--e LOGGING_LEVEL=info \
-tracardi/com-tracardi-segmentation-worker:0.8.1
+docker run -p 8081:80 \
+-e API_KEY=<random-api-key> \
+-e SECRET=<random-secret> \
+-e MYSQL_HOST=<mysql-ip> \
+tracardi/tms:0.9.0.4
 ```
 
-### 3. Scheduler Worker
+Set <random-api-key> and <random-secret> to random values.
 
-The Scheduler Worker is a commercial worker responsible for processing delayed events. It ensures that time-based
-triggers and other delayed tasks are executed efficiently.
+### 3. Background Worker
 
-To run the Scheduler Worker, execute the following Docker command:
+The Background Worker is a commercial worker responsible for processing background jobs. 
+
+To run the Background Worker, execute the following Docker command:
 
 ```bash
 docker run \
--e ELASTIC_HOST=http://<elastic-ip>:9200 \
--e REDIS_HOST=<redis-ip> \
--e LOGGING_LEVEL=info \
-tracardi/com-tracardi-scheduler-worker:0.8.1
-```
-
-### 4. Post-Collection Worker
-
-The Post-Collection Event Mapping, and Post-Collection Profile Mapping is required for mapping events and
-profiles after collection.
-
-```bash
-docker run \
+-e LICENSE=xxx \
 -e ELASTIC_HOST=http://<elastic-ip>:9200 \
 -e REDIS_HOST=redis://<redis-ip>:6379 \
+-e MYSQL_HOST=<mysql-ip> \
+-e PULSAR_HOST=pulsar://<pulsar-ip>:6650 \
+-e PULSAR_API=http://<pulsar-ip>:8080 \
 -e LOGGING_LEVEL=info \
-tracardi/com-tracardi-coping-worker:0.8.1
+tracardi/background-worker:0.9.0.4
 ```
 
-### 5. Trigger Worker
-
-The trigger worker is in charge of initiating workflows when a profile gets added to a specific segment.
-
-```bash
-docker run \
--e ELASTIC_HOST=http://<elastic-ip>:9200 \
--e REDIS_HOST=redis://<redis-ip>:6379 \
--e LOGGING_LEVEL=info \
-tracardi/com-tracardi-trigger-worker:0.8.1
-```

@@ -6,3 +6,5 @@ testing purposes only.
 
 * [Elasticsearch installation](elasticsearch.md)
 * [Redis](redis.md)
+* [Apache Pulsar](pulsar.md)
+* [Mysql](mysql.md) 

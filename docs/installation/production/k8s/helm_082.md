@@ -1,4 +1,4 @@
-## Tracardi Helm Chart Installation Guide
+## Tracardi Helm Chart Installation Guide version 0.8.2
 
 This document provides comprehensive instructions for installing the commercial Tracardi application on a Kubernetes (
 K8s) cluster using the Helm chart.
@@ -13,10 +13,9 @@ Before initiating the installation process, ensure you have completed the follow
    archive. Extract the contents of this archive into a folder named "tracardi". You will also receive a Docker Hub
    login token, which is required to access the commercial Docker images. Additionally, make sure you have the Tracardi
    license key.
-3. **[Install ElasticSearch and Redis](../../dependencies/index.md)**: Elasticsearch and redis are required as database and cache. 
+3. **[Install Dependant Services](../../dependencies/index.md)**: Elasticsearch, redis, mysql and apache pulsar are required. 
 
-4. **Elasticsearch and Redis Credentials**: Gather the username and password for Elasticsearch and the password for
-   Redis. These credentials will be necessary during the installation process.
+4. **Elasticsearch, Redis, Mysql, Apache Pulsar Credentials**: Gather for all required services it will be necessary during the installation process.
 
 #### Namespace Creation
 
