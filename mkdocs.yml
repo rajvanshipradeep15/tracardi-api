@@ -717,6 +717,11 @@ nav:
        - qa/facebook/account_id.md
        - qa/facebook/facebook_integration.md
        - qa/facebook/get_access_token.md
+       - qa/how_to_scale_tracardi.md
+       - qa/i_can_not_see_my_widget.md
+       - qa/what_are_the_pros_and_cons_of_multi-tenant_setup.md
+
+
 
 
 
@@ -737,6 +742,7 @@ nav:
        - qa/errors/error_15.md
        - qa/errors/error_16.md
        - qa/errors/error_17.md
+       - qa/errors/error_18.md
 
   - api/index.md
   - Developers:
