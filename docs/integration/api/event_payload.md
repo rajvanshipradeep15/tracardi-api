@@ -100,8 +100,6 @@ times.
 By customizing the `time` attributes, you can have more control over the temporal aspects associated with the event,
 ensuring accurate representation within your event tracking system.
 
-Example
-
 ```json title="Example of track data payload with event times" linenums="1" hl_lines="21-23"
 {
   "source": {
@@ -139,7 +137,9 @@ To override the session timestamps, you can use the session object. Add addition
 that will be used when the session is created. This is particularly useful if you are importing old data or want to pass
 the `create` time from your client. `Metadata` is optional.
 
-Example
+!!! Note
+
+      This feature is available from version 0.9.0.
 
 
 ```json title="Example of track data payload with session times" linenums="1" hl_lines="7-9"
@@ -175,7 +175,10 @@ To override the profile timestamps, you can use the profile object. Add addition
 that will be used when the profile is created. This is particularly useful if you are importing old data or want to pass
 the `create` time from your client. `Metadata` is optional.
 
-Example
+
+!!! Note
+
+      This feature is available from version 0.9.0.
 
 
 ```json title="Example of track data payload with profile times" linenums="1" hl_lines="10-12"
@@ -202,6 +205,48 @@ Example
     },
     ...
   ]
+}
+```
+
+### Profile IDs
+
+Additional profile IDS can be appended to the profile during event consumption. To do so, add `IDs` as an array of strings to the profile object. `Ids` are optional.
+
+!!! Note
+
+      This feature is available from version 0.9.0.
+
+```json title="Example of track data payload with profile ids" linenums="1" hl_lines="10-14"
+{
+   "source": {
+      "id": "Source ID"
+   },
+   "session": {
+      "id": "Session ID"
+   },
+   "profile": {
+      "id": "Profile ID",
+      "ids": [
+         "id1",
+         "id2",
+         "id3"
+      ],
+      "metadata": {
+         "create": "2023-01-01 00:00:00",
+         "insert": "2023-01-01 00:00:01",
+         "update": "2024-01-01 00:00:01"
+      }
+   },
+   "properties": {},
+   "events": [
+      {
+         "type": "event-type",
+         "properties": {
+            // Event properties
+         }
+      },
+      ...
+   ]
 }
 ```
 
