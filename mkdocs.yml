@@ -191,7 +191,8 @@ nav:
           - resources/commercial/weaviate_resource.md
           - resources/clicksend_resource.md
           - resources/apache_pulsar_resource.md
-
+          - resources/ghost_resource.md
+          - resources/s3_aws.md
 
   # Workflow and its action plugins that can be used
   - Workflows:
@@ -278,9 +279,14 @@ nav:
           - flow/actions/list/find_max_value.md
           - flow/actions/list/sets_operations.md
           - flow/actions/string_replace.md
-
-
-
+          - flow/actions/add_external_id_action.md
+          - flow/actions/assign_profile_id_action.md
+          - flow/actions/get_external_id_action.md
+          - flow/actions/ghost_labeler.md
+          - flow/actions/group_and_rank_interests.md
+          - flow/actions/s3_segment_upload.md
+          - flow/actions/segmentation/force_segment_action.md
+          - flow/actions/segmentation/has_segment_action.md
 
           # Commercial version plugins
           - Commercial:
@@ -701,6 +707,18 @@ nav:
        - qa/profile_merging_qa.md
        - qa/why_my_debuging_fails.md
 
+       - qa/how_to_send_event_when_customer_leaves_page.md
+       - qa/how_to_set_custom_event_time.md
+       - qa/how_to_use_api.md
+       - qa/is_there_a_way_to_disable_pulsar_in_commercial_tracardi.md
+       - qa/profile_event_structure.md
+       - qa/why_my_migration_do_not_start.md
+
+       - qa/facebook/account_id.md
+       - qa/facebook/facebook_integration.md
+       - qa/facebook/get_access_token.md
+
+
 
      - Errors:
        - qa/errors/error_11.md
@@ -718,6 +736,7 @@ nav:
        - qa/errors/error_14.md
        - qa/errors/error_15.md
        - qa/errors/error_16.md
+       - qa/errors/error_17.md
 
   - api/index.md
   - Developers:
@@ -738,6 +757,19 @@ nav:
 
       - Resources:
           - development/resource_dev.md
+  - Error descriptions:
+      - errors/C0001.md
+      - errors/C0002.md
+      - errors/C0003.md
+      - errors/C0004.md
+      - errors/M0001.md
+      - errors/M0002.md
+      - errors/M0003.md
+      - errors/R0001.md
+      - errors/R0002.md
+      - errors/R0003.md
+      - errors/S0001.md
+      - errors/S0002.md
 
   - License:
       - license/index.md
