@@ -7,13 +7,13 @@
   connected by any company to create their custom data processors and integrations.
   [x] Implement performance enhancements.
   [x] Incorporate Apache Pulsar into the system.
-  [ ] Move metadata to MySQL
+  [x] Move metadata to MySQL
   [ ] Single Sign-on
-  [ ] New Deployment Model
+  [x] New Deployment Model
 
 * Enhance Marketer-Focused User Interface
     - Introduce a unified segments list, including illustrative examples of segmented profiles.
-    - Standardize all segmentation processes.
+    [x] Standardize all segmentation processes.
     - Enable manual synchronization of profiles with profile destinations (Customer activations).
 
 * Streamline Workflow Editor

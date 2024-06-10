@@ -62,7 +62,7 @@ nav:
   - Getting started:
       - getting_started/index.md
   - Architecture:
-      - getting_started/architecture.md
+      - architecture/index.md
   - Installation:
 
       - Dependencies:
@@ -791,6 +791,7 @@ nav:
       - license/index.md
       - license/os_license.md
       - license/com_license.md
+
   - running/index.md
   - trouble/index.md
   - support_us.md

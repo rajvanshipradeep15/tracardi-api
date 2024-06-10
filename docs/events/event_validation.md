@@ -1,21 +1,4 @@
-# Event validation
-
-Events can be validated. Event validation can be configured in the Tracardi GUI or via the API. The endpoints
-responsible for creating the validation schemes are located at the following endpoints:
-
-| Method      | Path                                  |                                             |
-| ----------- | --------------------------------------|---------------------------------------------|
-| `GET`       | /event/management                     | Add event metadata and validation schema    |
-| `DELETE`    | /event/management/{event_type}        | Delete event metadata and validation schema |
-| `GET`       | /event/management                     | List event metadata with validation schemas |
-
-As always, complete API documentation is available at:
-
-```
-http://tracardi-host:8686/docs
-```
-
-## New event validation schema
+## Event validation schema
 
 To add new event validation schema that you will need to provide a Json Schema object that defines the model of event,
 or event session or loaded profile.
