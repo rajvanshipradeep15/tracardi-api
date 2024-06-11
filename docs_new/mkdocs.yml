@@ -88,8 +88,19 @@ nav:
           - getting_started/definitions/consent.md
           - getting_started/definitions/credentials.md
       - Tracardi Processes:
+          - getting_started/processes/integration/index.md
+          - Types of Integration:
+            - getting_started/processes/integration/api/api-integration.md
+            - getting_started/processes/integration/js/index.md
+            - getting_started/processes/integration/redirect/index.md
           - getting_started/processes/collection.md
           - getting_started/processes/tracking.md
+          - getting_started/processes/identity_resolution.md
+          - getting_started/processes/merging.md
+          - getting_started/processes/apm.md
+          - getting_started/processes/automation.md
+          - getting_started/processes/audience.md
+          - getting_started/processes/orchestration.md
 
   - Architecture:
       - architecture/index.md

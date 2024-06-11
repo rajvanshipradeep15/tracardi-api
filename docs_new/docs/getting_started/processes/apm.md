@@ -1,6 +1,4 @@
-# APM (Automatic Profile Merging)
-
-## Overview
+# Automatic Profile Merging
 
 Automatic Profile Merging (APM) is the process of merging user profiles. This feature ensures that all data related to a
 user is consolidated into a single profile. The APM functionality is designed to automatically merge profiles when

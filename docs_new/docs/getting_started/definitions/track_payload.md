@@ -1,6 +1,6 @@
-# Track Payload
+# Tracker Payload
 
-Track payload refers to the comprehensive data structure sent to the Tracardi system to record an
+Tracker payload refers to the comprehensive data structure sent to the Tracardi system to record an
 event. This payload includes all the necessary information to track and analyze customer interactions. Here's a detailed
 breakdown of the track payload:
 

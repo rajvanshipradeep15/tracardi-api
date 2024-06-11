@@ -79,8 +79,6 @@ The `Time` class provides timestamp information for the event, with the followin
 If the `insert` attribute is not provided explicitly, it defaults to the current UTC datetime at the time of
 instantiation.
 
-Example
-
 ## Usage
 
 ### Event type

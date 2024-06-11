@@ -4,7 +4,7 @@ Tracardi is build around 5 major processes.
 
 ### Key Processes in Tracardi
 
-* **Integration**: Integration is not a process within Tracardi. Instead, it occurs within a company and involves integrating systems
+* **[Integration](processes/integration/index.md)**: Integration is not a process within Tracardi. Instead, it occurs within a company and involves integrating systems
       with Tracardi to send data from various systems, websites, and databases to Tracardi.
 
 * **[Collection](processes/collection.md)**: Collection is the process responsible for gathering and ingesting data. It consists of several subprocesses:
