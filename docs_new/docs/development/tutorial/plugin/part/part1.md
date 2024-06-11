@@ -24,7 +24,7 @@ branch of the workflow.
 
 !!! Info
     To start working with the system, we need to prepare a development environment. Refer to the
-    [Python development environment](../../development/python_env.md) and read how
+    [Python development environment](../../../env/api_source.md) and read how
     to do this.
 
 ## Plugin life-cycle 

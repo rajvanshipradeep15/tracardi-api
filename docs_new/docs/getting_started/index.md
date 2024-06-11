@@ -49,7 +49,7 @@ configure event sources and event tracking. Here's a step-by-step guide to get y
 
 ### 1. Install Tracardi
 
-You need to have [Tracardi installed](../installation) and running. This can be done using Docker, Helm, or directly
+You need to have [Tracardi installed](../installation/index.md) and running. This can be done using Docker, Helm, or directly
 from the source code. Ensure that all necessary components, such as the backend, frontend, and optional modules, are
 installed.
 
@@ -125,8 +125,9 @@ or personalizing their customer journey.
 
 If you would like more details about Tracardi, please follow these documents:
 
-* **[Installation](../installation)**: How to install Tracardi
-* **[Core elements](core_elements.md)**
-    * **[Tracardi Components](components)**: Data objects used in Tracardi.
-    * **[Tracardi Definitions](definitions)**: Definitions used in Tracardi.
-    * **[Tracardi Processes](processes)**: Processes in Tracardi
+* **[Installation](../installation/index.md)**: How to install Tracardi
+* **[Core elements](core_concepts.md)**
+    * **[Tracardi Components](components/index.md)**: Data objects used in Tracardi.
+    * **[Tracardi Definitions](definitions/index.md)**: Definitions used in Tracardi.
+    * **[Tracardi Processes](processes/index.md)**: Processes in Tracardi
+    * **[Tracardi Codings](codings/index.md)**: Processes in Tracardi

@@ -1,6 +1,6 @@
 # Tracardi Installation
 
-* **[Dependencies](dependencies)** - Tracardi dependencies.
-* **[Open Source](opensource)** - Open source version installation.
-* **[Commercial](commercial)** - Commercial installation
-* **[Development](development)** - Development environments
+* **[Dependencies](dependencies/index.md)** - Tracardi dependencies.
+* **[Open Source](opensource/index.md)** - Open source version installation.
+* **[Commercial](commercial/index.md)** - Commercial installation
+* **[Development](../development/index.md)** - Development environments

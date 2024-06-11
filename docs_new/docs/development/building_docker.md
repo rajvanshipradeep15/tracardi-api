@@ -1,4 +1,4 @@
-# Building Tracardi docker image
+# Building Docker Image
 
 Sometimes you will need to build a docker container yourself. 
 It is usually needed when you would like your docker server to run https requests. 
@@ -18,11 +18,18 @@ docker build . -t tracardi-api
 
 After a while the docker will be built. It is on your computer, so you can run it like this.
 
-```
-docker run -p 8686:80 -e ELASTIC_HOST=http://<your-laptop-ip>:9200 tracardi-api
+```bash
+docker run -p 8686:80 \
+-e ELASTIC_HOST=http://<elasticsearch-ip>:9200 \
+-e REDIS_HOST=redis://<redis-ip>:6379 \
+-e MYSQL_HOST=<mysql-ip> \
+tracardi/tracardi-api:<last-version> #(1)
 ```
 
-!!! Note "Replace <your-laptop-ip> with your laptop IP"
+1. Replace <...-ip> with your local laptop IP if the service is installed locally or with server IP where the service is installed. Replace <last-version> with the latest version. Do not use latest.
+
+
+!!! Note "Replace <...-ip> with your laptop IP"
 
     Notice that that you can not type `http://localhost:9200`. This means that you're
     connecting to the docker itself as localhost means local in docker. Obviously elastic 
@@ -33,7 +40,3 @@ docker run -p 8686:80 -e ELASTIC_HOST=http://<your-laptop-ip>:9200 tracardi-api
     
     On windows you can use `ipconfig` command to find out your laptop IP.
     
----
-This documentation answers the following questions:
-    
-* How can I build a Tracardi docker image?

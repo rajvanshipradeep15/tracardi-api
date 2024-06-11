@@ -36,9 +36,9 @@ The first by providing a dictionary with configuration values (Below is a screen
 JSON Editor and Configuration Form)
 
 === "JSON configuration editor"
-    ![JSON configuration editor](../../images/JSON_configuration_editor.png)
+    ![JSON configuration editor](../../../../images/JSON_configuration_editor.png)
 === "Configuration form"
-    ![Configuration form](../../images/configuration_form.png)
+    ![Configuration form](../../../../images/configuration_form.png)
 
 The second way is to complete the form. It is related to the JSON configuration in such a way that when filling in the
 form fields, we automatically fill/change the JSON object.
@@ -384,7 +384,7 @@ list of `FormField` objects. Form field defines the type of field we display and
 configuration properties. Here we bind first field with the `event_type` property of the JSON configuration object.
 Property `component` defines the field component to use to edit the `event_type`.
 
-The list of available components can be found [here](../forms/list_of_field_types.md).
+The list of available components can be found [here](../form/list_of_field_types.md).
 
 When you reinstall the plugin you should see the form in the plugin configuration. Everytime you change something in
 the form it should be visible in the JSON configuration and vice-versa.
@@ -393,4 +393,4 @@ the form it should be visible in the JSON configuration and vice-versa.
 
 And this concludes the second part of the tutorial. We added the plugin configuration and attached a from to it.
 In the third part we will extend our plugin with the resource and reference the data
-with [dot notation](../../notations/dot_notation.md).  
+with [dot notation](../../../../getting_started/codings/dot_notation.md).  

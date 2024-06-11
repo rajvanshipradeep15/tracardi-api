@@ -3,7 +3,7 @@
 Tracardi provides a JavaScript snippet that allows seamless integration of any webpage with Tracardi for tracking and
 personalization purposes. 
 
-It is crucial to first understand the concept of [tracker payload](../../../definitions/track_payload.md) and [API integrations](../api/api-integration.md) because the JavaScript snippet is
+It is crucial to first understand the concept of [tracker payload](../../../definitions/track_payload.md) and [API integrations](../api/index.md) because the JavaScript snippet is
 browser code that relies on API integration and the tracker payload schema to send data.
 
 # Integrating Tracardi with web page.

@@ -1,4 +1,4 @@
-# Tracardi Data Partitioning Guide
+# Data Partitioning
 
 ## Overview
 
@@ -6,7 +6,7 @@ Data partitioning is a critical strategy for managing large datasets. It involve
 independent parts to improve manageability, performance, and availability. Tracardi utilizes this technique by
 segmenting indices that contain substantial amounts of data into separate time-based indices.
 
-## Benefits of Data Partitioning with Tracardi
+## Benefits of Data Partitioning
 
 Partitioning in Tracardi allows for:
 

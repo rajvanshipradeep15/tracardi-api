@@ -48,7 +48,7 @@ POST http://your-tracardi-url/track
       - Select the REST API Bridge as the method of data collection.
 
    - **Integration with External Systems**:
-      - Configure your external system to send HTTP POST requests to the [/track endpoint](../../../integration/api/api-integration.md) of your Tracardi instance.
+      - Configure your external system to send HTTP POST requests to the [/track endpoint](../../processes/integration/api/index.md#track-endpoint) of your Tracardi instance.
       - Ensure the payload follows the JSON structure required by Tracardi.
 
 - **Event Processing**:  Once the data is received by the /track endpoint, Tracardi processes the event through

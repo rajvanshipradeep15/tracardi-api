@@ -28,7 +28,7 @@ payloads, a [REST API Bridge](api.md) is recommended.
 - Handles unstructured data in JSON format.
 - Utilizes URLs to define the event and its source ID.
 - Allows sending event properties in the request body or as URL parameters.
-- Collect ['profile-less'](../profile_less_events.md) events then can be matched to existing profiles.
+- Collect [profile-less](../events/profile_less_events.md) events then can be matched to existing profiles.
 
 #### Posting Events with Webhooks
 

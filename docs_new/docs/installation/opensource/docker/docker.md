@@ -38,12 +38,6 @@ server IP.
     connecting to the docker itself as localhost means local in docker. Obviously elastic is not there, so Tracardi will
     never connect. Pass external ip for elastic. This may be your laptop IP if you are running Tracardi locally.
 
-For more troubleshooting solutions go to [Troubleshooting](../../../trouble/index.md)
-
-!!! More
-
-    For more elasticseach connection types, e.g. via HTTP see [advanced elasticsearch connection](../../configuration/elasticsearch/elastic_https.md).
-
 ### API Documentation
 
 For API documentation visit http://127.0.0.1:8686/docs

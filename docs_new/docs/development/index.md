@@ -11,6 +11,7 @@ review the list of available environments and select the one that aligns with yo
 ## Building docker
 
 * **[Building Tracardi Docker](building_docker.md)**
+* **[Building Tracardi Docker with SSL](building_ssl_docker.md)**
 
 ## Tutorials
 

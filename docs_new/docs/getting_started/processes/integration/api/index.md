@@ -2,6 +2,8 @@
 
 Integrating Tracardi with a web page or other systems is easy by calling the Tracardi endpoint.
 
+## Track Endpoint
+
 Events can be sent via the `/track` endpoint using the POST method and sending Tracker Payload
 
 ## Tracker Payload
@@ -482,6 +484,53 @@ requirements of the system or application. Here are some examples of what can be
 Event properties serve to enrich the event data, allowing for a more detailed and meaningful representation of the event
 within the system or application.
 
+
+## Tracker response
+
+This is the example of the response from Tracardi after the events were collected.
+
+```json
+{
+ "task": [
+  "fae054ab-fab4-4eaf-8762-f8b71638b043"
+ ],
+ "ux": [],
+ "response": {},
+ "events": [],
+ "profile": {
+  "id": "60a05b82-0554-48a6-a53c-b759031a8f0b"
+ },
+ "session": {
+  "id": "4812b132-1c07-4b68-899b-d18b5c24b6e6"
+ },
+ "errors": [],
+ "warnings": []
+}
+```
+
+### Response Schema Description
+
+
+| Key       | Description                                                              | Example Value                                                                 |
+|-----------|--------------------------------------------------------------------------|-------------------------------------------------------------------------------|
+| task      | List containing the Task ID                                              | ["fae054ab-fab4-4eaf-8762-f8b71638b043"]                                      |
+| ux        | List of JavaScript widgets to include on the page                        | [{"tag":"script","type":"text/javascript","content":["\n  (function(d,t) "]}] |
+| response  | Response data from workflow (requires synchronous event)                 | {"data": "value"}                                                             |
+| events    | List of events                                                           | []                                                                            |
+| profile   | Profile information                                                      | {"id": "60a05b82-0554-48a6-a53c-b759031a8f0b"}                                |
+| session   | Session information                                                      | {"id": "4812b132-1c07-4b68-899b-d18b5c24b6e6"}                                |
+| errors    | List of errors                                                           | ["error message"]                                                             |
+| warnings  | List of warnings                                                         | ["warning message"]                                                           |
+
+Response key can be considered as the output of workflows, which are executed based on the configurations and logic
+defined within them. These responses from multiple workflows are consolidated into a single response, which can then be further
+processed, analyzed, or used to trigger subsequent actions.
+
+Responses may also contain additional information, such as the response key, which is a defined field that includes the
+data returned by a specific workflow. The response key helps organize and structure the data collected from different
+workflows, making it easier to access and utilize in downstream processes.
+
+
 ## Other information
 
 ### Obtaining the Profile ID
@@ -504,5 +553,35 @@ and profile unchanged, this practice is not suggested. This is because if a prof
 will not be possible to change the visits associated with the profile. It is recommended to generate a new session ID
 for each visit to ensure accurate tracking and profiling of user behavior.
 
+### How to integrate Tracardi with mobile apps or external systems
 
+Integrating Tracardi with mobile apps or external systems follows a similar process as integrating with a web page, with
+the only difference being that Tracardi provides a JavaScript snippet for a web page that simplifies the integration. The JavaScript
+snippet automates the process of calling the track endpoint and saving the Session ID and Profile ID in the browser.
 
+However, when integrating with mobile apps or backend systems, the process needs to be done manually. It is crucial to
+remember that both the Profile ID and Session ID must be saved on the customer's device or backend system for effective
+[tracking](../../../processes/tracking.md).
+
+While it may be evident to save the Profile ID and Session ID when integrating with a mobile app, it may not be as
+apparent when integrating with a PHP application or other server-side applications. In such cases, it is necessary to
+set a PHPSESSIONID or other relevant token that can be used to track the customer and store the Tracardi Profile ID and
+Session ID within the defined user session. This ensures that the data collected by Tracardi can be accurately
+associated with the correct customer profile and used for further personalization or analysis.
+
+It is essential to follow these steps diligently when integrating Tracardi with mobile apps or external systems to
+ensure error-free [tracking](../../../processes/tracking.md).
+
+# Errors
+
+## Response - 422 Unprocessed entity
+
+This error occurs when the tracker payload is missing some data. Usually it will happen when you miss required field.
+
+## Response - Unauthorized
+
+This error occurs when the `source.id` that is sent with payload does not exist in Tracardi.
+
+## Response - Headers
+
+With response there is a `x-process-time` header thar returns how much time it took to process the request.

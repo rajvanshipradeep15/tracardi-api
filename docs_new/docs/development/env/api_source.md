@@ -175,10 +175,6 @@ Now it is time to open `tracardi library` and reference it as dependency of `tra
 3. Find and select `tracardi` folder
 4. Click open project as `attach`
 
-You should see something like this in your PyCharm editor.
-
-![Attached project in PyCharm](../images/attached-project.png)
-
 ## Running inside PyCharm
 
 1. Find folder `app` in `tracardi-api`

@@ -75,8 +75,9 @@ A resource in this context acts similarly to a [bridge](components/bridge.md) in
 the [Event Source](components/event_source.md), facilitating the connection to the external
 system.
 
-Note that not all resources are available as destinations in Tracardi. For detailed information on outbound traffic and
-available destinations, refer to the [outbound traffic](../traffic/outbound/index.md) documentation.
+!!!Note 
+
+    Not all resources are available as destinations in Tracardi. 
 
 In summary, a destination is a system or service where data is forwarded for further processing or storage, enabling
 data transfer and integration between different platforms.

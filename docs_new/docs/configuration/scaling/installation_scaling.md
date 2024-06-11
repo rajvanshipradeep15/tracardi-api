@@ -1,4 +1,4 @@
-# Production installation scaling
+# Installation scaling
 
 Deploying a production environment of Tracardi requires careful planning and optimization to ensure that the system is
 efficient, scalable, and reliable. This article provides recommendations for deploying Tracardi in a production setting,
@@ -78,7 +78,7 @@ data volume and should be used selectively during system tuning phases. Please s
 
 ### 13. Security
 
-Set the `AUTO_PROFILE_MERGING` and `INSTALLATION_TOKEN` to your custom values. See [guide on separating the APIs](guide.md).
+Set the `AUTO_PROFILE_MERGING` and `INSTALLATION_TOKEN` to your custom values.
 
 ### Conclusion
 

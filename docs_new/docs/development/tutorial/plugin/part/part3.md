@@ -9,7 +9,7 @@ the above data (data, and API endpoint).
 ## Let's get started
 
 Often when coding a plugin, we want to use the data defined by the user. For example, the user references some data
-from the internal state of the workflow that he wants to an external API. To do this he uses so-called dot notation. 
+from the internal state of the workflow that he wants to an external API. To do this he uses so-called [dot notation](../../../../getting_started/codings/dot_notation.md). 
 Dot notation is a way of specifying the location of the data. It looks like this. 
 
 ```
@@ -23,7 +23,7 @@ event@properties.email
 ```
 
 It means get the data from the event from its `properties.email`. A full description of all sources and how the data
-reference works can be found [here](../../notations/dot_notation.md).
+reference works can be found [here](../../../../getting_started/codings/dot_notation.md).
 
 In this tutorial we are interested in how to use this entry and retrieve data, and how to put a field in the form that
 will require a dot notation entry.
@@ -67,7 +67,7 @@ form = Form(groups=[
 
 With this, we will get a field of this type in the form.
 
-![Dot path form field](../../images/dot_path.png)
+![Dot path form field](../../../../images/dot_path.png)
 
 Then we need to extend `init` in register function with a `data` field and extend an object that will store the data and
 verify its correctness at the same time.
@@ -106,7 +106,7 @@ class Configuration(PluginConfig):
 1. Validates the data property. It is defined as string, but it __may not be empty__ string
 
 We have configuration data, now it's time to read data entered in the form and read data
-from [dot notation](../../notations/dot_notation.md).
+from [dot notation](../../../../getting_started/codings/dot_notation.md).
 
 We do it as follows:
 

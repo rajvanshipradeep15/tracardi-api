@@ -87,10 +87,15 @@ nav:
           - getting_started/definitions/metadata.md
           - getting_started/definitions/consent.md
           - getting_started/definitions/credentials.md
+      - Tracardi Codings:
+          - getting_started/codings/dot_notation.md
+          - getting_started/codings/logic_notation.md
+          - getting_started/codings/object_template.md
+          - getting_started/codings/templates.md
       - Tracardi Processes:
           - getting_started/processes/integration/index.md
           - Types of Integration:
-            - getting_started/processes/integration/api/api-integration.md
+            - getting_started/processes/integration/api/index.md
             - getting_started/processes/integration/js/index.md
             - getting_started/processes/integration/redirect/index.md
           - getting_started/processes/collection.md
@@ -132,59 +137,24 @@ nav:
           - Docker:
               - installation/commercial/docker/docker.md
               - installation/commercial/docker/docker_compose.md
-
+  - Configuration:
+      - configuration/index.md
+      - configuration/best_practises.md
+      - configuration/multi-tenant/index.md
+      - Scaling:
+          - configuration/scaling/data_partitioning.md
+          - configuration/scaling/installation_scaling.md
+      - configuration/staging/index.md
+      - Dependencies:
+        - Elasticsearch:
+            - configuration/elasticsearch/elastic_https.md
+            - configuration/elasticsearch/connecting_elasticsearch_cluster.md
+            - configuration/elasticsearch/elastic_authentication.md
+            - configuration/elasticsearch/elastic_max_connections.md
+            - configuration/elasticsearch/elastic_sniffing.md
   - Upgrade:
       - upgrade/upgrades.md
 
-#  - Configuration:
-#      - configuration/tracardi_configuration.md
-#      - configuration/best_practises.md
-#      - Elasticsearch:
-#          - configuration/elasticsearch/elastic_https.md
-#          - configuration/elasticsearch/connecting_elasticsearch_cluster.md
-#          - configuration/elasticsearch/elastic_authentication.md
-#          - configuration/elasticsearch/elastic_max_connections.md
-#          - configuration/elasticsearch/elastic_sniffing.md
-#      - Staging server:
-#          - configuration/staging/index.md
-#      - configuration/tracardi_ssl.md
-  - Integration:
-      - API:
-          - integration/api/api-integration.md
-          - integration/api/mobile-integration.md
-          - integration/api/tracker-response.md
-          - integration/api/errors.md
-          - integration/api/event_payload.md
-      - Javascript:
-          - integration/js/index.md
-          - integration/js/context.md
-          - integration/js/options.md
-          - integration/js/response.md
-          - integration/js/advanced.md
-      - Redirected Links:
-          - integration/redirect/index.md
-      - Passing Profile ID in link:
-          - integration/param/index.md
-  - Tracardi Concepts:
-      - concepts/index.md
-      - Customer Data Collection:
-          - concepts/collection/index.md
-          - Inbound Traffic:
-            - traffic/inbound/index.md
-          - Bridges:
-              - bridge/index.md
-              - bridge/rest_api.md
-              - bridge/webhook.md
-          - Outbound traffic:
-            - traffic/outbound/index.md
-      - Journey Automation:
-          - concepts/automation/index.md
-      - Audiences:
-          - concepts/audiences/index.md
-  - Tracardi Data:
-      - data/index.md
-  - Maintenance:
-      - maintenance/index.md
   - Development:
       - development/index.md
       - Tutorials:
@@ -194,6 +164,7 @@ nav:
           - development/tutorial/destination.md
       - Dockers:
           - development/building_docker.md
+          - development/building_ssl_docker.md
 
 #  - Events:
 #      - events/index.md
@@ -833,8 +804,6 @@ nav:
       - license/os_license.md
       - license/com_license.md
 
-  - running/index.md
-  - trouble/index.md
   - support_us.md
   - documentation_license.md
 

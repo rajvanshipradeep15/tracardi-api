@@ -38,7 +38,7 @@ class DestinationInterface:
 
 ### Step 4: Understand the Class Properties
 
-- `Resource`: Manages user-selected resource settings. See [How to add resource](resource_dev.md) for more details on how to add new resources if they are not defined already in the system.
+- `Resource`: Manages user-selected resource settings. See [How to add resource](resource.md) for more details on how to add new resources if they are not defined already in the system.
 - `Destination`: Handles user-defined destination details.
 - `debug`: Indicates the debug mode status.
 

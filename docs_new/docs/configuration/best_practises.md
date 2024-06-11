@@ -1,28 +1,25 @@
-# Guide for Setting Up in Production
-
-## Dependencies
-
-Tracardi depends on:
-
-* Redis
-* Elastic search
-* Apache Pulsar
-* MySql
-
-Please install the above services before-hand. 
-
-## Installation best practises
+# Configuration Best Practises
 
 To enhance security, consider setting up encrypted connections for Tracardi API access. You can encode external traffic
 to the load balancer while keeping internal cluster communication unencoded, ensuring both security and efficiency.
 Alternatively, encrypt the entire cluster by creating HTTPS versions of Tracardi Docker images for comprehensive
-encryption. Find detailed instructions in the [documentation](../../configuration/tracardi_ssl.md).
+encryption.
 
-### Separation of track server and GUI API
+## Set strong admin password
 
-#### API
+Having a strong admin password is especially important for systems that handle sensitive or confidential data, such as
+personal information. If an admin password is weak or easily guessed, it could be exploited by attackers or unauthorized
+individuals, who could gain access to sensitive data or disrupt the system's operation.
 
-A recommended approach involves having two Tracardi API instances: one for the GUI and another for event collection.
+By setting a strong admin password, you can help to prevent unauthorized access and protect the security and integrity
+of the system or application. This can help to ensure that your data and systems are safe from unauthorized access and
+tampering, and that you can trust the security and reliability of your system or application.
+
+## Separation of track server and GUI API
+
+### API
+
+A recommended approach involves having two Tracardi API instances: one for the GUI and another for event [collection](../getting_started/processes/collection.md).
 
 1. **Event Collection Cluster:** This cluster is accessible over the Internet and handles event collection. To achieve
    this:
@@ -37,25 +34,7 @@ A recommended approach involves having two Tracardi API instances: one for the G
 
 #### GUI
 
-GUI should be accessible only from trusted network for security reasons.
-
-## Scaling
-
-Scaling means adjusting the system to handle more or less traffic. In Tracardi, this could mean adding more servers (
-tracardi-api) to deal with more event tracking requests.
-
-Tracardi is stateless, it means it doesn't rely on data stored inside docker, so it's easy to scale by adding or removing
-dockers without causing problems. To handle this, we recommend using Kubernetes, a tool that helps manage these servers.
-Tracardi API doesn't need special treatment when being restarted or relaunched.
-
-A single docker replica of Tracardi API starts 1 worker. Each worker is able to handle multiple asynchronous
-connections. You can run multiple replicas of Tracardi API.
-
-## Tracardi Service List
-
-Apart from the mentioned API and GUI, Tracardi manages additional services for task execution, such as jobs and workers.
-Check out [this document](services.md) for a comprehensive list.
-
+GUI and GUI API should be accessible only from trusted network for security reasons.
 
 -------------
 
@@ -68,6 +47,10 @@ and install GUI on your local machine.
 Q: __Do tracardi need any particular routing inside cluster?__
 A: The internal routing from load balancer to Tracardi instances can be for example: round-robin. Tracardi do not
 require long-lasting sticky sessions.
+
+
+
+
 
 
 

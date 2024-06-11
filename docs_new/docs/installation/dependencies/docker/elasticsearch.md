@@ -26,8 +26,7 @@ docker run -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elas
 !!! Note
 
     Running one instance of elasticsaerch is not a production solution. For production purposes, 
-    it is necessary to run the elasticearch cluster. You can also [read here how to connect Tracardi](../../configuration/elasticsearch/connecting_elasticsearch_cluster.md) 
-    to an elasticsearch cluster
+    it is necessary to run the elasticearch cluster. 
 
 ---
 Questions answered by this document:
