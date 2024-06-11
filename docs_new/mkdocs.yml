@@ -65,10 +65,17 @@ nav:
       - Components:
           - getting_started/components/bridge.md
           - Types of Bridges:
-              - API
+              - getting_started/components/bridges/api.md
               - getting_started/components/bridges/webhook.md
-              - Redirect URL
+              - getting_started/components/bridges/redirect.md
           - getting_started/components/event_source.md
+          - getting_started/components/session.md
+          - getting_started/components/event.md
+          - Types of Events:
+              - getting_started/components/events/system_events.md
+              - getting_started/components/events/profile_less_events.md
+              - getting_started/components/events/ephemeral_events.md
+          - getting_started/components/profile.md
   - Architecture:
       - architecture/index.md
   - Installation:

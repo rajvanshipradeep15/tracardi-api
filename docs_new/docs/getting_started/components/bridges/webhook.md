@@ -15,37 +15,22 @@ A webhook is a way for an application to provide other applications with real-ti
 It allows one application to send a message or information to another application when a specific event or trigger
 occurs.
 
-# Webhook Bridge Documentation
-
 ## Overview
 
 ### What is a Webhook Bridge?
 
 A Webhook Bridge is a tool designed to collect unstructured data via an API call from external systems. It is
 particularly useful for retrieving data from systems where the data structure is beyond our control. For structured
-payloads, a REST API Bridge is recommended.
+payloads, a [REST API Bridge](api.md) is recommended.
 
 ### Key Features
 
 - Handles unstructured data in JSON format.
 - Utilizes URLs to define the event and its source ID.
 - Allows sending event properties in the request body or as URL parameters.
-- Collect 'profile-less' events the can be matched to existing profiles.
+- Collect ['profile-less'](../profile_less_events.md) events then can be matched to existing profiles.
 
-## Tracking Events with Webhook
-
-### Definition and Use
-
-- Webhooks provide real-time data transmission between applications when triggered by specific events.
-- Commonly used in various applications and services like social media, payment gateways, and CRM systems.
-
-### Profile-less Events
-
-- Profile-less events do not create a profile.
-- The event enters the workflow without a profile.
-- Can be matched to existing profile if there is a Profile ID, email, or phone in webhook payload.
-
-#### Posting Profile-less Events
+#### Posting Events with Webhooks
 
 - Use the format: `POST /collect/EVENT-TYPE/SOURCE-ID`
 - `EVENT-TYPE`: Type of the event (e.g., `coupon-received`).
@@ -65,7 +50,8 @@ payloads, a REST API Bridge is recommended.
 The Webhook Bridge offers two distinct methods for matching profiles based on the data available in the payload.
 
 #### Method 1: Direct Profile ID Matching
-- **Applicability**: When the payload contains a profile ID. Configure the Webhook Bridge to use this ID for loading profiles in Tracardi.
+
+- **Applicability**: When the payload contains a profile ID. Configure the Webhook Bridge to use this ID for loading profiles in Tracardi. 
 - **Operational Process**: If the ID exists in the system, the corresponding profile is matched directly.
 
 #### Method 2: Matching via Auto Profile Merging

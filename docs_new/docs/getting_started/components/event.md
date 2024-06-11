@@ -52,11 +52,11 @@ Tracardi supports four primary types of events:
 
 - **Events with Profiles**: These events are associated with user profiles, providing a richer context by linking events
   to specific users.
-- **[Events without Profiles](profile_less_events.md)**: These events are not linked to any user profile, useful for tracking anonymous or
+- **[Events without Profiles](events/profile_less_events.md)**: These events are not linked to any user profile, useful for tracking anonymous or
   non-user-specific actions.
-- **[Ephemeral events](ephemeral_events.md)**: Ephemeral events are temporary events that are processed without being permanently stored in the system
-- **[System Events](system_events.md)**: System events in Tracardi are automatically generated events that record the internal workings of the system.
-- 
+- **[Ephemeral events](events/ephemeral_events.md)**: Ephemeral events are temporary events that are processed without being permanently stored in the system
+- **[System Events](events/system_events.md)**: System events in Tracardi are automatically generated events that record the internal workings of the system.
+
 ### Flexibility and Usage
 
 Events provide a flexible and powerful way to track and respond to user interactions. They are fundamental to

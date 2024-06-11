@@ -20,29 +20,22 @@ or system-generated events. Here’s a detailed overview of profile-less events 
 
 ### Implementing Profile-less Events
 
-When creating or handling events in Tracardi, you can specify whether an event should be profile-less. Here are the main
-considerations:
-
-1. **Event Payload**:
-    - Ensure the event payload does not include profile-related information or set appropriate flags to indicate the
-      event is profile-less.
+Profile-less events are usually created when using event source that is based on a webhook bridge. Then usually you can not control schema of sent data:
 
 ### Example Configuration
 
 Here’s an example of a profile-less event payload:
 
-```json
+``` title="Example of profile-less data"
+POST /collect/EVENT-TYPE/SOURCE-ID`
 {
-  "type": "page-view",
-  "properties": {
     "url": "https://example.com",
-    "title": "Example Page"
-  },
-  "profile": null
+    "user": "John",
+    "email": "a@a.com"
 }
 ```
 
-In this example, the `profile` field is set to `null`, indicating that the event does not relate to any user profile.
+In this example, we use a `/collect` endpoint and send just the data without any additional metadata.
 
 ### Considerations
 

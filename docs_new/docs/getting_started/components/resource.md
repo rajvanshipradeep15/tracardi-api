@@ -1,4 +1,6 @@
-In Tracardi, a resource is a configurable object that represents an external service, data source, or API that Tracardi
+# Resource
+
+A resource is a configurable object that represents an external service, data source, or API that Tracardi
 can connect to and interact with. Resources are used to manage credentials, configurations, and connections to these
 external systems, allowing Tracardi to perform actions such as data retrieval, sending data, and integrating with
 third-party services.
@@ -98,5 +100,5 @@ Tracardi supports various types of resources, including but not limited to:
 - **Security**: Resources allow for secure handling of sensitive information like API keys and authentication
   credentials.
 
-By leveraging resources in Tracardi, you can seamlessly integrate with a wide range of external systems and services,
-enhancing the capabilities of your workflows and ensuring robust data management and interaction.
+Resources are an [extension point](../definitions/extension_point.md) in tracardi meaning you can easily code your
+own destination and add it to the system core.
