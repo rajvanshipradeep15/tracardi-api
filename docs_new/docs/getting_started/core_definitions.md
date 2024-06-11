@@ -1,6 +1,6 @@
 # Tracardi Definitions
 
-Tracardi is build of 4 major processes.
+Tracardi is build around 4 major processes.
 
 * **Collector** - Is a process that is responsible for collecting and ingesting data. It consist of Event Sources,
   Bridges, Data Validators, And Data Mappers.
@@ -19,9 +19,9 @@ In order to understand how Tracardi CPD works you will need to learn the followi
 Tracardi is capable of both receiving and sending data, thus defining two types of traffic:
 
 1. **Inbound Traffic:** This includes systems that send data to Tracardi, such as websites, internal systems, and
-   services. The incoming traffic is identified by an Source ID defined in Tracardi.
+   services. The incoming traffic is usually associated with [event source](components/event_source.md) and identified by an Source ID defined in Tracardi.
 
-2. **Outgoing Traffic:** This involves external systems or services to which Tracardi can sends data.
+2. **Outgoing Traffic:** This involves external systems or services to which Tracardi can sends data. Outgoing Traffic is usually associated destinations.
 
 !!! Tip
 
@@ -30,7 +30,7 @@ Tracardi is capable of both receiving and sending data, thus defining two types 
 
 ### Bridge
 
-A bridge is a piece of software that connects two separate systems or applications, allowing them to communicate and
+A [bridge](components/bridge.md) is a piece of software that connects two separate systems or applications, allowing them to communicate and
 exchange data. In Tracardi **a bridge is a piece of software that collects data from a particular event source using
 particular protocol**, such as a API call, queue, email, and transfer to the system collector. For example, Tracardi
 come with an open source API bridge that allows it to collect data from an API `/track` endpoint and transfer it to the
@@ -42,7 +42,7 @@ to facilitate the collection and transfer of data.
 
 ### Event Source - Inbound Traffic
 
-In order to kick-start your new project with Tracardi, you must create a new event source. That source will give you an
+In order to kick-start your new project with Tracardi, you must create a new [event source](components/event_source.md). That source will give you an
 identifier which when attached to your track calls will start collecting data about your users. Event source needs a
 bridge that will transfer data to the system.
 

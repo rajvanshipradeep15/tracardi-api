@@ -42,81 +42,91 @@ The primary purposes of installing Tracardi include:
   Data Enrichment: It enhances raw data with additional context and information, improving its value for
   decision-making.
 
-
 ## Getting Started
 
-To start collecting data in Tracardi, you need to set up the system, integrate it with your website or application, and configure event sources and event tracking. Here's a step-by-step guide to get you started:
-
+To start collecting data in Tracardi, you need to set up the system, integrate it with your website or application, and
+configure event sources and event tracking. Here's a step-by-step guide to get you started:
 
 ### 1. Install Tracardi
 
-You need to have Tracardi installed and running. This can be done using Docker, Helm, or directly from the source code. Ensure that all necessary components, such as the backend, frontend, and optional modules, are installed.
+You need to have [Tracardi installed](../installation) and running. This can be done using Docker, Helm, or directly
+from the source code. Ensure that all necessary components, such as the backend, frontend, and optional modules, are
+installed.
+
 ### 2. Configure Event Sources
 
-Event sources are the points where data enters Tracardi. You need to define these sources in the Tracardi system to start collecting data from them.
+Event sources are the points where data enters Tracardi. You need to define these sources in the Tracardi system to
+start collecting data from them.
 
-    Creating an Event Source: Go to the Tracardi GUI, navigate to Inbound Traffic, and add a new event source. You'll need to provide details such as the name, type, and URL of the event source.
+* **Creating an Event Source**: Go to the Tracardi GUI, navigate to Inbound Traffic, and add a new event source. You'll
+  need to provide details such as the name, type, and URL of the event source.
 
 ### 3. Integrate Tracardi JavaScript Snippet
 
-To collect data from your website, you need to integrate the Tracardi JavaScript snippet into your web pages.
+To collect data from your website, you need to integrate the Tracardi JavaScript snippet into your web pages. Add the
+JavaScript Snippet. You can find the snippet by clicking the event source and selecting `Use & Javascript` Tab:
 
-    Add the JavaScript Snippet:
+```html title="Example configuration snippet, that should be placed on all pages"
 
-    html
-
-    <script>
-        !function(e){"object"==typeof exports&&"undefined"!=typeof module..
-    </script>
-    <script>
-        const options = {
-            tracker: {
-                url: {
-                    script: 'http://your-tracardi-url/tracker',
-                    api: 'http://your-tracardi-url'
-                },
-                source: {
-                    id: "<your-event-source-id>"
-                }
+<script>
+    !function(e){"object"==typeof exports&&"undefined"!=typeof module..
+</script>
+<script>
+    const options = {
+        tracker: {
+            url: {
+                script: 'http://your-tracardi-url/tracker',
+                api: 'http://your-tracardi-url'
+            },
+            source: {
+                id: "<your-event-source-id>"
             }
         }
-    </script>
+    }
+</script>
+```
 
-    Replace your-tracardi-url with the URL of your Tracardi API server and your-event-source-id with the ID of your event source.
+!!! Tip
+
+    Do not forget to replace your-tracardi-url with the URL of your Tracardi API server and your-event-source-id with the ID of your event source.
 
 ### 4. Send Events via JavaScript
 
-Define and send events from your web pages using JavaScript. Events can represent various user actions such as page views, clicks, form submissions, etc.
+Define and send events from your web pages using JavaScript. Events can represent various user actions such as page
+views, clicks, form submissions, etc. Events properties are the data that is associated with the event, e.g. page url,
+form data, etc.
 
-    Example of Sending Events:
-
-    javascript
-
-    window.tracker.track("page-view", {"url": window.location.href, "title": document.title});
-    window.tracker.track("button-click", {"button-id": "subscribe-button"});
+```javascript title="Example snippet for data collection"
+    window.tracker.track("page-view", {
+      "url": window.location.href, 
+      "title": document.title, 
+      "category": "product details"
+    });
+    window.tracker.track("button-click", {
+      "button-id": "subscribe-button"
+    });
+```
 
 ### 5. Verify Integration
 
 After adding the JavaScript code and sending events, verify that the data is being collected properly in Tracardi.
 
-    Check Event Data: Navigate to the Tracardi GUI and check the Events section to see if the events from your web pages are being captured.
+* **Check Event Data**: Navigate to the Tracardi GUI and check the Events section to see if the events from your web
+  pages are being captured. Data should appear withing 3 to 5 seconds.
 
 ### 6. Configure Workflows
 
-Workflows define how events are processed in Tracardi. You can set up workflows to analyze and act on the collected data.
+Workflows define how events are processed in Tracardi. You can set up workflows to act on the collected
+data. Workflows are not necessary to collect user data. They can automate the customer journey and allow messaging user or personalizing their customer journey. 
 
-    Create Workflows: Go to the Processing section, create a new workflow, and define the nodes and actions based on your requirements.
+* **Create Workflows**: Go to the Processing section, create a new workflow, and define the nodes and actions based on your requirements.
 
-Additional Features and Configurations
-
-    Link Tracking: Track user interactions with links using the Inbound Traffic/Event Redirects feature.
-    Real-time Processing: Send events immediately by setting the fire parameter to true in your JavaScript code.
-    Event Context: Extend event information by defining context data such as browser metadata and system variables.
+If you would like more details about Tracardi, please follow these documents:
 
 * **[Tracardi Core Definitions](core_definitions.md)**: Core terms used in Tracardi.
 * **[Installation](../installation)**: How to install Tracardi
 * **[Data collection](data_collection.md)**: How data is collected in Tracardi
 * [Tracking and Identity resolution](tracking.md)
-  * [Event tracking](../events/event_tracking.md)
-  * [Profile merging](../profiles/profile_merging.md)
+    * [Event tracking](../events/event_tracking.md)
+    * [Profile merging](../profiles/profile_merging.md)
 * [Profile segmentation](../profiles/profile_segmentation.md)

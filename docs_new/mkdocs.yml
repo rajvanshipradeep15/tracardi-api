@@ -61,6 +61,14 @@ nav:
   - index.md
   - Getting started:
       - getting_started/index.md
+      - getting_started/core_definitions.md
+      - Components:
+          - getting_started/components/bridge.md
+          - Types of Bridges:
+              - API
+              - getting_started/components/bridges/webhook.md
+              - Redirect URL
+          - getting_started/components/event_source.md
   - Architecture:
       - architecture/index.md
   - Installation:
