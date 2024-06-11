@@ -47,10 +47,8 @@ tells that some customer belongs to defined segment.
 
 In contrast to segments, audiences in the context of marketing automation and data management are generally more static
 and purpose-specific. Unlike segments, which are continuously updated based on ongoing data collection, time passing,
-and behavioral
-changes, audiences are typically created for a specific purpose as a data query at a specific point in time. Here's a
-detailed look
-at the audience properties:
+and behavioral changes, audiences are typically created for a specific purpose as a data query at a specific point in time. Here's a
+detailed look at the audience properties:
 
 1. **Purpose-Specific Creation**: An audience is often created for a particular marketing campaign or business
    initiative. This means that the data used to define an audience is queried and compiled to meet the specific

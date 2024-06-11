@@ -61,8 +61,8 @@ nav:
   - index.md
   - Getting started:
       - getting_started/index.md
-      - getting_started/core_definitions.md
-      - Components:
+      - getting_started/core_concepts.md
+      - Tracardi Components:
           - getting_started/components/bridge.md
           - Types of Bridges:
               - getting_started/components/bridges/api.md
@@ -76,6 +76,21 @@ nav:
               - getting_started/components/events/profile_less_events.md
               - getting_started/components/events/ephemeral_events.md
           - getting_started/components/profile.md
+          - getting_started/components/trigger.md
+          - getting_started/components/workflow.md
+          - getting_started/components/resource.md
+          - getting_started/components/action.md
+          - getting_started/components/destination.md
+      - Tracardi Definitions:
+          - getting_started/definitions/traffic.md
+          - getting_started/definitions/track_payload.md
+          - getting_started/definitions/metadata.md
+          - getting_started/definitions/consent.md
+          - getting_started/definitions/credentials.md
+      - Tracardi Processes:
+          - getting_started/processes/collection.md
+          - getting_started/processes/tracking.md
+
   - Architecture:
       - architecture/index.md
   - Installation:

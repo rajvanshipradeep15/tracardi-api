@@ -117,16 +117,16 @@ After adding the JavaScript code and sending events, verify that the data is bei
 ### 6. Configure Workflows
 
 Workflows define how events are processed in Tracardi. You can set up workflows to act on the collected
-data. Workflows are not necessary to collect user data. They can automate the customer journey and allow messaging user or personalizing their customer journey. 
+data. Workflows are not necessary to collect user data. They can automate the customer journey and allow messaging user
+or personalizing their customer journey.
 
-* **Create Workflows**: Go to the Processing section, create a new workflow, and define the nodes and actions based on your requirements.
+* **Create Workflows**: Go to the Processing section, create a new workflow, and define the nodes and actions based on
+  your requirements.
 
 If you would like more details about Tracardi, please follow these documents:
 
-* **[Tracardi Core Definitions](core_definitions.md)**: Core terms used in Tracardi.
 * **[Installation](../installation)**: How to install Tracardi
-* **[Data collection](data_collection.md)**: How data is collected in Tracardi
-* [Tracking and Identity resolution](tracking.md)
-    * [Event tracking](../events/event_tracking.md)
-    * [Profile merging](../profiles/profile_merging.md)
-* [Profile segmentation](../profiles/profile_segmentation.md)
+* **[Core elements](core_elements.md)**
+    * **[Tracardi Components](components)**: Data objects used in Tracardi.
+    * **[Tracardi Definitions](definitions)**: Definitions used in Tracardi.
+    * **[Tracardi Processes](processes)**: Processes in Tracardi

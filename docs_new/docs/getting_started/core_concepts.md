@@ -1,14 +1,22 @@
-# Tracardi Definitions
+# Tracardi Concepts
 
-Tracardi is build around 4 major processes.
+Tracardi is build around 5 major processes.
 
-* **Collector** - Is a process that is responsible for collecting and ingesting data. It consist of Event Sources,
-  Bridges, Data Validators, And Data Mappers.
-* **Automation** - Process that automates customer journey and can enhance customer profile. Also automation can
-  personalize customer journey and trigger messaging.
-* **Audiences** - Process that creates audiences/segments and orchestrates it to external system such as Marketing
-  Automation.
-* **Orchestrator/Router** - Process responsible for sending customer data to external systems.
+### Key Processes in Tracardi
+
+* **Integration**: Integration is not a process within Tracardi. Instead, it occurs within a company and involves integrating systems
+      with Tracardi to send data from various systems, websites, and databases to Tracardi.
+
+* **[Collection](processes/collection.md)**: Collection is the process responsible for gathering and ingesting data. It consists of several subprocesses:
+      * **[Tracking](processes/tracking.md)**: The process of maintaining a consistent single Profile ID across all customer interactions on a single device. It is the responsibility of the device/client to keep the Profile ID unchanged.
+      * **[Identity Resolution and Merging](processes/identity_resolution.md)**: The process of maintaining a consistent single profile across all customer devices. It is Tracardi's responsibility to merge all profiles created on different devices whenever possible.
+      * **Storing Data**: This process involves storing collected data in one profile record and referencing all historical events and sessions.
+
+* **[Automation](processes/automation.md)**: This process automates the customer journey, enhances customer profiles, personalizes customer experiences, and triggers messaging.
+
+* **[Audiences and Activations](processes/audience.md)**: The process of creating audiences/segments and orchestrating them to external systems such as Marketing Automation platforms.
+
+* **[Orchestrator/Router](processes/orchestration.md)**: The process responsible for sending customer data to external systems.
 
 ## Core Definitions
 
@@ -156,33 +164,39 @@ executed when an [event](components/event.md) arrives. A rule consists
 of a condition and a workflow name. When an event is received, the system evaluates the rule's condition to determine if
 it is met. If the condition is met, the associated workflow is executed.
 
-The condition of a [trigger](components/trigger.md) includes two required elements and one optional element: the event type and the [event](components/event.md)
+The condition of a [trigger](components/trigger.md) includes two required elements and one optional element: the event
+type and the [event](components/event.md)
 source are required. The condition is considered met if the event is of a specified type and originates from a specified
 source. Optionally, the triggering can be restricted based on user consents. For example, if a user has not consented to
 data enhancement, the workflow responsible for enhancing profiles will not be executed.
 
-Triggers in Tracardi create a direct link between incoming [events](components/event.md) and the [workflows](components/workflow.md) that should be triggered in
+Triggers in Tracardi create a direct link between incoming [events](components/event.md) and
+the [workflows](components/workflow.md) that should be triggered in
 response. By defining appropriate rules, you can automate workflow execution based on the arrival of specific events in
 the system. This automation enables efficient and responsive handling of various event-driven scenarios.
 
 ### [Workflow](components/workflow.md)
 
-A [workflow](components/workflow.md) is a series of actions that are executed in response to an [event](components/event.md). When an event is matched with a [workflow](components/workflow.md) ,
+A [workflow](components/workflow.md) is a series of actions that are executed in response to
+an [event](components/event.md). When an event is matched with a [workflow](components/workflow.md) ,
 the actions in the workflow are executed according to the defined graph of nodes and connections.
 
-In Tracardi a [workflow](components/workflow.md) is represented as a graph of nodes, with actions being assigned to individual nodes. The
+In Tracardi a [workflow](components/workflow.md) is represented as a graph of nodes, with actions being assigned to
+individual nodes. The
 connections between nodes represent the flow of data from one action to another. Actions may perform a variety of tasks,
 such as copying data from the event to a user profile, saving the profile, querying for additional data, sending data to
 another system, or emitting a new event.
 
-Actions in a [workflow](components/workflow.md) may be executed one after another, or they may be run in parallel. This allows for a high degree
+Actions in a [workflow](components/workflow.md) may be executed one after another, or they may be run in parallel. This
+allows for a high degree
 of flexibility in defining the sequence and execution of actions within a workflow. By constructing the appropriate
 graph of nodes and connections, it is possible to create complex, multi-step workflows that perform a wide range of
 tasks in response to events.
 
 ### Actions
 
-In the Tracardi system, an action is a single task that is performed as part of a [workflow](components/workflow.md). An action consists of input
+In the Tracardi system, an action is a single task that is performed as part of a [workflow](components/workflow.md). An
+action consists of input
 and output ports, which are used to receive and send data, respectively. The input ports of an action are used to
 receive data from other actions or from external sources, while the output ports are used to send data to other actions
 or external systems.
