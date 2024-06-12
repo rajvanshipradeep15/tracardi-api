@@ -1,4 +1,4 @@
-# How to Add a Resource to Tracardi
+# Code Resource
 
 This tutorial will guide you through adding a new resource setting to Tracardi. As an example, we will add a setting for
 an Apache Pulsar client, which connects to a queue and publishes messages. This is part of a larger tutorial on adding a

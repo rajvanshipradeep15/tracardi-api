@@ -1,6 +1,6 @@
-# Micro frontend applications
+# Code Widgets
 
-Tracardi uses micro application to interact with customers. Micro-apps are regular ReactJs, or Angular, or plain
+Tracardi uses micro application (widgets) to interact with customers. Micro-apps are regular ReactJs, or Angular, or plain
 Javascript apps that can be bundled into single javascript file and injected into the webpage.
 
 We use a ReactJs template repo for new ReactJs app.

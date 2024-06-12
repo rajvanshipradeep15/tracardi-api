@@ -1,4 +1,4 @@
-# Plug-ins getting started
+# Code Workflow Plug-ins
 
 Plug-ins are python classes which can be installed in Tracardi and become a part of Tracardi workflow.
 Plug-ins are sometimes called actions or action plug-ins.

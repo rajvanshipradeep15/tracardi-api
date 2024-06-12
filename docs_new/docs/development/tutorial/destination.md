@@ -1,4 +1,4 @@
-# How to Add a New Destination Type in Tracardi
+# Code Destination
 
 Integrating a new destination type in Tracardi enhances its functionality and customizability. This comprehensive guide
 provides a step-by-step approach to adding a new destination type, using Apache Pulsar as an example.
