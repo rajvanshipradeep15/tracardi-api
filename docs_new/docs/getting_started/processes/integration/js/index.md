@@ -56,44 +56,7 @@ events: `purchase-order`, `interest`, `page-view`.
 
     The code with events must be placed after the configuration code. Otherwise, it will now work.
 
-### Event type
-
-Event type is a crucial aspect of defining events in Tracardi. It refers to the name that distinguishes events from each
-other. For example, a `purchase-order` event provides information about an order, while a `page-view` event signifies a
-viewed page.
-
-Defining an appropriate event type is essential to ensure proper categorization and processing of events within
-Tracardi. It allows you to effectively organize and analyze event data based on their type.
-
-#### Importance of Event Type
-
-Event type serves as a unique identifier for events and helps differentiate them from one another. It enables you to
-effectively manage and process events, as different events may require different handling or processing logic based on
-their type.
-
-When defining an event in Tracardi, you need to specify an event type that accurately represents the nature of the
-event. For instance, if you are tracking purchase orders, you can define the event type as "purchase-order". Similarly,
-if you are tracking page views, you can define the event type as "page-view".
-
-### Events properties
-
-In Tracardi, each event can have additional data that provides detailed information about the event. For example,
-consider the event "interest" which sends data in the format {"Electronics": ["Mobile phones", "Accessories"]}.
-
-Tracardi collects all events with their respective data and sends them as a single request to the Tracardi tracker
-endpoint. This request is made when the web page is fully loaded, ensuring that all events and their associated data are
-captured accurately.
-
-### Event context
-
-[Event context](context.md) in Tracardi refers to the additional information that provides context to an event, helping to better
-understand the circumstances under which the event occurred. This context includes metadata about the event, such as the
-creation date, and other environmental details. By capturing this supplementary
-information, Tracardi can enrich the event data, making it more valuable for analysis and personalization.
-
-### Event types
-
-There are different event types in Tracardi please refer to [event types](../../../components/event.md#types-of-events) for more information.
+For a [detailed description of event trigger function see this page](event_trigger.md).
 
 ## Step 3: Refreshing the Page and Verifying the Response
 
@@ -139,9 +102,316 @@ source ID from Tracardi, as shown below:
 Please notice that there is also the URL of Tracardi backend server. Please replace the IP e.g. `192.168.1.103` with the
 address of your Tracardi server.
 
-## Step 4: Extending with Auto Events and Triggers (optional)
+# Additional configuration
 
-Auto events and triggers provide a streamlined approach to managing event handling in web pages. This documentation
+## Configuration of event context scope
+
+Tracardi automatically adds a context to the event. The scope of the context can be configured. 
+Configuration can be extended with *context* parameter, where you may define the scope of context data.
+
+!!! Caution
+
+    When working with event's context in Tracardi, it's important to understand that the context data refers to all 
+    tracker events within a session, rather than a single event. The context data is saved in the session when it is 
+    created and remains constant throughout the session, as data such as browser type or system used typically 
+    does not change during a visitor's session on a website.
+
+    However, it's worth noting that some context data, such as the page URL, may change from event to event within a 
+    session. This dynamic data is sent in the event context. Although It is configured on the tracker level it 
+    will be attached to each event.
+
+```javascript title="Example of tracker configuration with scope of event context" linenums="1" hl_lines="10-16"
+    const options = {
+      tracker: {
+        url: {
+            script: '//localhost:8686/tracker',
+            api: '//localhost:8686'
+        },
+        source: {
+            id: "3ee63fc6-490a-4fd8-bfb3-bf0c8c8d3387"
+        },
+        context: {
+            cookies: false,
+            storage: false,
+            browser: true,
+            page: true,
+            screen: true,
+            performance: false,
+            location: false
+        }
+    }
+}
+```
+
+If you omit the context configuration it will be set to the default value:
+
+```json title="Default Context Values"
+{
+  "cookies": false,
+  "storage": false,
+  "screen": true,
+  "page": true,
+  "browser": true,
+  "performance": false,
+  "location": false
+}
+```
+
+By default, the following session context data will be sent to Tracardi:
+
+```json title="Example" linenums="1"
+{
+  "context": {
+    "time": {
+      "local": "12/8/2021, 12:50:55 AM",
+      "tz": "Europe/Warsaw"
+    },
+    "browser": {
+      "local": {
+        "browser": {
+          "name": "Netscape",
+          "engine": "Gecko",
+          "appVersion": "5.0 (X11)",
+          "userAgent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:94.0) Gecko/20100101 Firefox/94.0",
+          "language": "en-US",
+          "onLine": true,
+          "javaEnabled": false,
+          "cookieEnabled": true
+        },
+        "device": {
+          "platform": "Linux x86_64"
+        }
+      }
+    },
+    "screen": {
+      "local": {
+        "width": 1835,
+        "height": 1032,
+        "innerWidth": 1835,
+        "innerHeight": 928,
+        "availWidth": 1835,
+        "availHeight": 1013,
+        "colorDepth": 24,
+        "pixelDepth": 24
+      }
+    }
+  }
+}
+```
+
+It consists of browser data, screen data and page data. It can be extended with cookies and local storage data.
+Storage (localStorage) and session data is by default excluded. You can change it by explicitly flagging storage:true in
+the context configuration.
+
+!!! Caution
+
+    Sending cookies and localStorage data can lead to data explosion in Tracardi database. Each customer may have
+    different cookies and local data that will lead to the 1000 fields per record limit in elastic. This will stop writing
+    new sessions to the system.
+
+### Customer GEO location
+
+By setting the __context.location__ to true, system will try to catch geo location on client side. 
+
+### Event performance metrics
+
+If you set `tracker.context.performance` to TRUE in tracker context configuration the result from __window.performance.getEntriesByType("
+navigation")__ will be sent as event context.
+
+```json title="Example of event performance context"
+{
+  "context": {
+    "performance": {
+      "name": "http://localhost:63343/analytics-js-tracardi/index.html",
+      "entryType": "navigation",
+      "startTime": 0,
+      "duration": 0,
+      "initiatorType": "navigation",
+      "nextHopProtocol": "http/1.1",
+      "workerStart": 0,
+      "redirectStart": 0,
+      "redirectEnd": 0,
+      "fetchStart": 20,
+      "domainLookupStart": 101,
+      "domainLookupEnd": 101,
+      "connectStart": 101,
+      "connectEnd": 102,
+      "secureConnectionStart": 0,
+      "requestStart": 102,
+      "responseStart": 102,
+      "responseEnd": 102,
+      "transferSize": 9394,
+      "encodedBodySize": 9089,
+      "decodedBodySize": 9089,
+      "serverTiming": [],
+      "unloadEventStart": 106,
+      "unloadEventEnd": 107,
+      "domInteractive": 158,
+      "domContentLoadedEventStart": 160,
+      "domContentLoadedEventEnd": 161,
+      "domComplete": 0,
+      "loadEventStart": 0,
+      "loadEventEnd": 0,
+      "type": "reload",
+      "redirectCount": 0
+    }
+  }
+}
+```
+
+## Append profile ID to external links (Tagging links)
+
+The tracking script has the capability to include the current profile ID, session ID, and source ID in the URL
+parameter, allowing for consistent profile ID persistence across domains that utilize the same Tracardi system. It
+uses [Parametrized Links](../param/index.md) feature to pass the Profile ID across different web sites.
+
+
+!!! Note 
+
+      Please note that default system behaviour without `passing of profile ID in Link` enabled would be to create a random profile ID
+      if customer never visited the page before. And later merge the profile if customer provides data that can be used 
+      for this. 
+
+To enable this functionality, you can add the following code: `trackExternalLinks: ['example.com', 'tracardi.com']`. 
+This will automatically update all `A.href` links on the page 
+with the `__tr_pid`, `__tr_src` parameter, which will contain the current profile ID, source ID respectively, if
+the A.href URL end with any of the defined domains in `trackExternalLinks`. In our example it is 'example.com' and , 
+'tracardi.com'.
+
+```javascript title="Example" linenums="1" hl_lines="10-12"
+    const options = {
+      tracker: {
+        url: {
+            script: '//localhost:8686/tracker',
+            api: '//localhost:8686'
+        },
+        source: {
+            id: "3ee63fc6-490a-4fd8-bfb3-bf0c8c8d3387"
+        },
+        settings: {
+          trackExternalLinks: ['example.com', 'tracardi.com']
+        }
+    }
+}
+```
+
+Tracardi recognize these params and saves them in `session.context` and replaces profile ID with the profile ID
+referenced in `__tr_pid`
+
+!!! Warning
+
+    Profile must exist in Tracardi to be passed from domain to domain. If profile does not exist then
+    new profile ID will be generated and a Javascript warning will be logged: `Referred Tracardi Profile Id
+    {referred_profile_id} is invalid`.
+
+!!! Notice
+
+    This feature is available from version 0.8.1 up.
+
+```json
+{
+  "context": {
+    "tracardi": {
+      "pass": {
+        "profile": "0adfd4c8-36eb-40cd-9350-5df37706286a",
+        "source": "d15aaf64-90ff-4c72-9d93-e7851c326127",
+        "session": "9cb9a69b-e657-47dc-85f6-791ebc4b4822"
+      }
+    }
+  }
+}
+```
+
+Where possible system will use this information to merge profiles between devices and browsers. 
+
+!!! Tip
+
+    The script utilizes an underlying technique that involves creating a POST payload for the tracker, with 
+    parameters such as `__tr_pid`, `__tr_src`. The payload contains data sent in a specific context, 
+    formatted as follows in JSON:
+    
+    ```json
+    {
+      "source": {
+        "id": "d15aaf64-90ff-4c72-9d93-e7851c326127"
+      },
+      "context": {
+        "tracardi": {
+          "pass": {
+            "profile": "0adfd4c8-36eb-40cd-9350-5df37706286a",
+            "source": "d15aaf64-90ff-4c72-9d93-e7851c326127"
+          }
+        }
+      },
+      "profile": {
+        "id": "0adfd4c8-36eb-40cd-9350-5df37706286a"
+      },
+      "session": {
+        "id": "3a18978e-1d74-4382-8e50-f0b8ae3c2d55"
+      },
+      "options": {},
+      "events": [ ... ]
+    }
+    ```
+
+    This technique can be used also to reference profile ID from browser to device. 
+    However you will need a find a way to pass the refered profile ID, session ID, and source ID to your mobile 
+    device when the app is opened, and the first `/track` payload should include the refered IDs. The same 
+    will also work with other systems. 
+
+To disable params `__tr_pid`, `__tr_src` and turn off session context, set `tracardiPass` to `false` in 
+tracker context:
+
+```javascript title="Example" linenums="1" hl_lines="10-12"
+    const options = {
+      tracker: {
+        url: {
+            script: '//localhost:8686/tracker',
+            api: '//localhost:8686'
+        },
+        source: {
+            id: "3ee63fc6-490a-4fd8-bfb3-bf0c8c8d3387"
+        },
+        context: {
+            tracardiPass: false
+        }
+    }
+}
+```
+
+
+### Respect Do Not Track (DNT) browser setting
+
+Do Not Track (DNT) is a web browser setting that adds a signal to the browser, telling websites that the user don’t want
+to be tracked. By 2011, DNT had been adopted by all the major browsers, but it’s not enforceable. That means its default
+value is set to track the user.
+
+You can respect the browser setting and do not to track the user. If you decide to do this Tracardi will not load the
+tracking script if the user sets DNT. To respect the DNT set `respectDoNotTrack: true`
+in settings section of tracker options.
+
+```javascript title="Example" linenums="1" hl_lines="10-12"
+    const options = {
+      tracker: {
+        url: {
+            script: '//localhost:8686/tracker',
+            api: '//localhost:8686'
+        },
+        source: {
+            id: "3ee63fc6-490a-4fd8-bfb3-bf0c8c8d3387"
+        },
+        settings: {
+          respectDoNotTrack: true
+        }
+    }
+}
+```
+
+If the `respectDoNotTrack` is missing in the settings than Tracardi sets default setting and loads tracking script.
+
+## Auto Events
+
+Auto events and triggers provide a simple approach to managing event handling in web pages. This documentation
 outlines the benefits of using auto events, describes how they are configured, and provides guidance on integrating
 triggers with HTML elements.
 
@@ -160,8 +430,7 @@ Auto events and triggers are configured using a structured format.
 
 Following is an example configuration:
 
-```javascript title="Configuration Example"
-
+```javascript title="Configuration Example" hl_lines="10-20"
 const options = {
     tracker: {
         url: {
@@ -188,7 +457,7 @@ const options = {
 
 Note:
 
-* (1) - Optional auto object extends the track options.
+* (1) - Optional `auto` configuration extends the track options.
 
 ### Usage with Triggers and HTML Elements
 
@@ -228,4 +497,8 @@ corresponding event defined in your JavaScript configuration will be triggered.
 3. By integrating triggers with HTML elements using the data-tracardi-tag attribute, you can easily specify which
    elements should activate events based on user interactions, enabling flexible and targeted event tracking on your web
    pages.
+
+
+
+
 

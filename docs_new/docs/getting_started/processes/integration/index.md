@@ -28,7 +28,7 @@ Both methods use the Tracardi API.
   parameter `__tr_pid` to identify the customer. 
 
 Both methods are similar, but they differ in who sends the event to the system. In Redirected Links, Tracardi handles
-the event since the link is within the system. In the second method, the script located at the destination address is
+the event since the link is within the system. In the second method, the script located at the target page is
 responsible for sending the event.
 
 There could be other integration types when different [bridges](../../components/bridge.md) are used.
