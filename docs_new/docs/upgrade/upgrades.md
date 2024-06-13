@@ -16,7 +16,7 @@ docker pull tracardi/tracardi-api:<version>
 docker pull tracardi/tracardi-gui:<version>
 ```
 
-Then you can run it the same way as written in the [installation](docker/index.md) guide.
+Then you can run it the same way as written in the [installation](../installation/index.md) guide.
 
 !!! Warning
 

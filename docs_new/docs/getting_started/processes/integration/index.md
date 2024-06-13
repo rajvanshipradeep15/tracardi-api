@@ -6,17 +6,29 @@ processed.
 
 ## Integration Types
 
+### Integrations via API
+
 1. **[API Calls](api/index.md)**:
     - Tracardi supports integration with external systems through APIs. This involves setting up API endpoints to
       receive data from third-party applications or to send processed data and insights back to these applications.
 
 2. **[Javascript](js/index.md)**:
-    - Integration allows for the automatic ingestion of data from external sources into Tracardi. This can include user
-      interactions, transactional data, and other relevant events captured from websites, mobile apps, CRM systems, and
-      other databases.
+    - This type of integration allows for the automatic event ingestion from the web page.
 
-3. **[Redirect Links](redirect/index.md)**:
-    - Integration involves defining event sources within Tracardi. Event sources are configurations that specify how and
-      from where data is collected. Examples include webhooks, REST APIs, and direct database connections.
+Both methods use the Tracardi API.
+
+### Integrations via URL
+
+1. **[Redirected Links](redirect/index.md)**: This method involves creating
+  special links that, when clicked, send information to Tracardi about the user and then redirect them to a specific page. The information is stored within the link itself.
+
+2. **[Parameterized Links](param/index.md)**: The second method involves adding
+  a parameter `__tr_pid` to an existing link. This parameter contains user information. When user visits the target
+  page, the tracking script, that must exist on the target page, sends an event to Tracardi and use the
+  parameter `__tr_pid` to identify the customer. 
+
+Both methods are similar, but they differ in who sends the event to the system. In Redirected Links, Tracardi handles
+the event since the link is within the system. In the second method, the script located at the destination address is
+responsible for sending the event.
 
 There could be other integration types when different [bridges](../../components/bridge.md) are used.

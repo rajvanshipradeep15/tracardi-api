@@ -1,11 +1,11 @@
-# Resource
+# Resource Definition
 
 A resource is a configurable object that represents an external service, data source, or API that Tracardi
 can connect to and interact with. Resources are used to manage credentials, configurations, and connections to these
 external systems, allowing Tracardi to perform actions such as data retrieval, sending data, and integrating with
 third-party services.
 
-### Components of a Resource
+## Components of a Resource
 
 1. **Resource ID**: A unique identifier for the resource.
 2. **Resource Name**: A descriptive name for the resource.
@@ -15,7 +15,7 @@ third-party services.
    have with it (e.g., database, API, messaging service).
 5. **Tags**: Keywords or tags associated with the resource to help categorize and filter resources within the system.
 
-### Creating and Managing Resources
+## Creating and Managing Resources
 
 Resources are created and managed within Tracardi's GUI. Here are the steps typically involved:
 
@@ -25,7 +25,7 @@ Resources are created and managed within Tracardi's GUI. Here are the steps typi
 3. **Save the Resource**: Save the resource configuration, making it available for use in workflows and other parts of
    the system.
 
-### Using Resources in Workflows
+## Using Resources in Workflows
 
 Resources can be utilized in workflows to perform various actions, such as fetching data from an API, sending data to an
 external service, or integrating with other systems. Here’s how resources are typically used in Tracardi workflows:
@@ -36,7 +36,7 @@ external service, or integrating with other systems. Here’s how resources are 
 3. **Execute Actions**: Carry out the desired actions using the resource, such as sending a request to an API or
    retrieving data from a database.
 
-### Example: API Resource
+## Example: API Resource
 
 Here’s an example of how an API resource might be configured and used in Tracardi:
 
@@ -82,7 +82,7 @@ Here’s an example of how an API resource might be configured and used in Traca
             return response.json()
     ```
 
-### Resource Types
+## Resource Types
 
 Tracardi supports various types of resources, including but not limited to:
 
@@ -91,7 +91,7 @@ Tracardi supports various types of resources, including but not limited to:
 - **Messaging Services**: For connecting to messaging platforms like Kafka, RabbitMQ, etc.
 - **Storage Services**: For connecting to cloud storage services like AWS S3, Google Cloud Storage, etc.
 
-### Benefits of Using Resources
+## Benefits of Using Resources
 
 - **Centralized Configuration**: Resources provide a centralized way to manage connection details and credentials for
   external services.
@@ -99,6 +99,18 @@ Tracardi supports various types of resources, including but not limited to:
   configuration overhead.
 - **Security**: Resources allow for secure handling of sensitive information like API keys and authentication
   credentials.
+
+## Credentials
+
+Most of the resources need credentials that are used to connect to the resource. Credentials are attached to resource
+and stored inside Tracardi.
+
+### Credentials caching
+
+Credentials are subject to caching. That means that after they are changed you will not see the change immediately but
+after a certain number of seconds. Usually 60 seconds.
+
+## Extending Resource Types
 
 Resources are an [extension point](../definitions/extension_point.md) in tracardi meaning you can easily code your
 own destination and add it to the system core.

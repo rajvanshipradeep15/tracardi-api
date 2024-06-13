@@ -1,7 +1,7 @@
 # Link tracking, redirects
 
-A link tracking is a valuable tool for tracking and associating clicks on links with user profiles. It is commonly used
-when sending emails with community invites, promotions, etc. or monitoring email openings. By creating redirected links,
+A redirect URLs are a valuable tool for tracking customer clicks. It is commonly used
+when sending marketing emails. By creating redirected links/urls,
 we can track user interactions and gather data. For example, we can create a link that redirects to a tiny 1px image.
 When that image is displayed, Tracardi receives an event indicating the email was opened. Additionally, the redirect
 link can include the customer's session ID to identify the specific customer.

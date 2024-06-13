@@ -1,4 +1,4 @@
-# Automation
+# Automation Types
 
 Automation in Tracardi refers to the capability to perform tasks and processes without manual intervention by leveraging
 predefined rules, workflows, and integrations. This involves the use of machine learning algorithms and advanced
