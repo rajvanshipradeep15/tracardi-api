@@ -108,7 +108,7 @@ async def del_event_type_metadata(id: str):
 
 @router.get("/events-to-profiles/by_tag", tags=["event-type"], include_in_schema=tracardi.expose_gui_api,
             response_model=dict)
-async def list_events_to_profiles_by_tag(query: str = None, start: Optional[int] = 0, limit: Optional[int] = 10):
+async def list_events_to_profiles_by_tag(query: str = None, start: Optional[int] = 0, limit: Optional[int] = 25):
     """
     Lists events to profiles coping schema by tag, according to given start (int), limit (int) and query (str)
     """
