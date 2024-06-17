@@ -26,7 +26,8 @@ docker run -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elas
 !!! Note
 
     Running one instance of elasticsaerch is not a production solution. For production purposes, 
-    it is necessary to run the elasticearch cluster. 
+    it is necessary to run the elasticearch cluster. Last tested version that is compatible with tracardi is: 8.11.3. 
+    We suggest installing version 7.13.2 as this version we use for our internal testing.  
 
 ---
 Questions answered by this document:

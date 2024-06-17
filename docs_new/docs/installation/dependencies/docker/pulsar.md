@@ -19,4 +19,9 @@ bin/pulsar standalone
 
     This docker does not have any storage volume attached to it so when stopped all the data will be lost. 
 
+!!! Notice
+
+    Last tested version of apache pulsar is: version 3.1.0.
+
+
 Please see the Apache Pulsar Documentation for proper installation.

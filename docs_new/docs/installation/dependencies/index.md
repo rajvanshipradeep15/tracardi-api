@@ -15,10 +15,10 @@ We have several options when installing dependencies. Use your preferred method.
 
 ### Docker installation
 
-* [Elasticsearch docker installation](docker/elasticsearch.md)
-* [Redis docker installation](docker/redis.md)
-* [Apache Pulsar docker installation](docker/pulsar.md)
-* [Mysql docker installation](docker/mysql.md)
+* [Elasticsearch docker installation](docker/elasticsearch.md) - version up to 8.11.3 
+* [Redis docker installation](docker/redis.md) - Tracardi should work with any version of Redis. Recently tested version (7.2.4)
+* [Apache Pulsar docker installation](docker/pulsar.md) - version 3.1.0
+* [Mysql docker installation](docker/mysql.md) - version 8.3. Tracardi also works on percona version tested on 8.0.36.
 
 ### Installation from DEB
 
