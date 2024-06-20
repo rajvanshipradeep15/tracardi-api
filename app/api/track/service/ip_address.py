@@ -1,6 +1,6 @@
 from fastapi import Request
 
-from app.config import server
+from tracardi.config import server
 
 
 def get_ip_address(request: Request) -> str:

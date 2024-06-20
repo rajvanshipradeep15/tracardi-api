@@ -18,7 +18,7 @@ sys.path.append(f"{_local_dir}/api/proto/stubs")
 
 from starlette.responses import JSONResponse
 from time import time
-from app.config import server
+from tracardi.config import server
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Request
 from starlette.staticfiles import StaticFiles
