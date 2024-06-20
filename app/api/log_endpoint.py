@@ -2,7 +2,7 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends
 from app.api.auth.permissions import Permissions
-from app.config import server
+from tracardi.config import server
 from tracardi.config import tracardi
 from tracardi.service.storage.driver.elastic import log as log_db
 
