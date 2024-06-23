@@ -139,7 +139,7 @@ tags_metadata = [
         "description": "Manage profiles. Read more about core concepts of TRACARDI in documentation.",
         "externalDocs": {
             "description": "Profile external docs",
-            "url": "http://docs.tracardi.com",
+            "url": "http://manual.tracardi.com",
         },
     },
     {
@@ -147,7 +147,7 @@ tags_metadata = [
         "description": "Manage data resources. Read more about core concepts of TRACARDI in documentation.",
         "externalDocs": {
             "description": "Resource external docs",
-            "url": "http://docs.tracardi.com",
+            "url": "http://manual.tracardi.com",
         },
     },
     {
@@ -155,7 +155,7 @@ tags_metadata = [
         "description": "Manage flow rule triggers. Read more about core concepts of TRACARDI in documentation.",
         "externalDocs": {
             "description": "Rule external docs",
-            "url": "http://docs.tracardi.com",
+            "url": "http://manual.tracardi.com",
         },
     },
     {
@@ -163,7 +163,7 @@ tags_metadata = [
         "description": "Manage flows. Read more about core concepts of TRACARDI in documentation.",
         "externalDocs": {
             "description": "Flows external docs",
-            "url": "http://docs.tracardi.com",
+            "url": "http://manual.tracardi.com",
         },
     },
     {
@@ -171,7 +171,7 @@ tags_metadata = [
         "description": "Manage events. Read more about core concepts of TRACARDI in documentation.",
         "externalDocs": {
             "description": "Events external docs",
-            "url": "http://docs.tracardi.com",
+            "url": "http://manual.tracardi.com",
         },
     },
     {
@@ -180,10 +180,10 @@ tags_metadata = [
     },
     {
         "name": "tracker",
-        "description": "Read more about TRACARDI event server in documentation. http://docs.tracardi.com",
+        "description": "Read more about TRACARDI event server in documentation. http://manual.tracardi.com",
         "externalDocs": {
             "description": "External docs",
-            "url": "http://docs.tracardi.com",
+            "url": "http://manual.tracardi.com",
         },
     }
 ]
