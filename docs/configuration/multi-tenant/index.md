@@ -1,17 +1,22 @@
-# Creating a New Tenant using API Call
+# Multi tenant configuration
+
+Multitenant set-up requires a service called TMS (Tenant Management System) to run. This service offers an API-only
+access to create, update and delete tenants.
+
+## Creating a New Tenant using API Call
 
 This documentation outlines the process of automating the creation of a new tenant through the Tracardi API. To achieve
 this, you'll need an API Key associated with the TMS, which is generated during the installation of the TMS.
 
-## Prerequisites
+### Prerequisites
 
 - Tenant Management Service (TMS) API Key
 
-## API Endpoint and Method
+### API Endpoint and Method
 
 Make an API call to the Tracardi API using the POST method and the endpoint `/tenant/install`.
 
-## Payload
+### Payload
 
 Send the following payload in JSON format along with the API call:
 
@@ -26,7 +31,7 @@ Send the following payload in JSON format along with the API call:
 }
 ```
 
-## Example CURL
+### Example CURL
 
 Here's an example of how to make the API call using the CURL command:
 
@@ -44,7 +49,7 @@ curl -X POST \
 }'
 ```
 
-## Result
+### Result
 
 Upon successfully making the API call, a new tenant will be created with the provided name. This name will form the
 initial part of the tenant's URL, such as `name-of-the-tenant.mydomain.com`. An admin account will also be created using

@@ -19,7 +19,7 @@ from tracardi.service.storage.mysql.mapping.event_redirect_mapping import map_to
 from tracardi.service.storage.mysql.service.event_redirect_service import EventRedirectService
 from tracardi.domain.payload.tracker_payload import TrackerPayload
 from tracardi.exceptions.exception import UnauthorizedException, FieldTypeConflictException, \
-    EventValidationException
+    EventValidationException, BlockedException
 from tracardi.exceptions.log_handler import get_logger
 from app.api.track.service.ip_address import get_ip_address
 from tracardi.service.track_event import track_event
@@ -52,6 +52,11 @@ async def _track(tracker_payload: TrackerPayload, host: str, allowed_bridges):
             tracker_payload,
             host,
             allowed_bridges=allowed_bridges)
+    except BlockedException as e:
+        message = str(e)
+        logger.warning(message)
+        raise HTTPException(detail=message,
+                            status_code=status.HTTP_406_NOT_ACCEPTABLE)
     except (UnauthorizedException, PermissionError) as e:
         message = str(e)
         logger.error(message)
@@ -107,6 +112,7 @@ async def track_async(tracker_payload: TrackerPayload, request: Request, profile
 
 
 @router.post("/collect/{event_type}/{source_id}/{session_id}", tags=['collector'])
+@router.post("/collect/{event_type}/{source_id}/{session_id}/", tags=['collector'])
 async def track_post_webhook_with_session(event_type: str, source_id: str, request: Request, session_id: Optional[str] = None):
     """
     Collects data from request POST and adds event type. It stays profile-less if no session provided.
@@ -139,6 +145,7 @@ async def track_post_webhook_with_session(event_type: str, source_id: str, reque
 
 
 @router.get("/collect/{event_type}/{source_id}/{session_id}", tags=['collector'])
+@router.get("/collect/{event_type}/{source_id}/{session_id}/", tags=['collector'])
 async def track_get_webhook(event_type: str, source_id: str, request: Request, session_id: Optional[str] = None):
     """
     Collects data from request GET and adds event type. It stays profile-less if no session provided.
@@ -171,6 +178,7 @@ async def track_get_webhook(event_type: str, source_id: str, request: Request, s
 
 
 @router.get("/collect/{event_type}/{source_id}", tags=['collector'])
+@router.get("/collect/{event_type}/{source_id}/", tags=['collector'])
 async def track_get_webhook(event_type: str, source_id: str, request: Request):
     """
     Collects data from request GET and adds event type. It stays profile-less if no session provided.
@@ -203,6 +211,7 @@ async def track_get_webhook(event_type: str, source_id: str, request: Request):
 
 
 @router.post("/collect/{event_type}/{source_id}", tags=['collector'])
+@router.post("/collect/{event_type}/{source_id}/", tags=['collector'])
 async def track_post_webhook(event_type: str, source_id: str, request: Request):
     """
     Collects data from request POST and adds event type. It stays profile-less.

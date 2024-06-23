@@ -1,7 +1,6 @@
 # Tracardi Installation
 
-There are three versions of tracardi. Select which one would you like to install:
-
-* [Open-source](opensource/index.md)
-* [Commercial](commercial/index.md)
-* [Developer](development/index.md)
+* **[Dependencies](dependencies/index.md)** - Tracardi dependencies.
+* **[Open Source](opensource/index.md)** - Open source version installation.
+* **[Commercial](commercial/index.md)** - Commercial installation
+* **[Development](../development/index.md)** - Development environments

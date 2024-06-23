@@ -1,46 +1,82 @@
-# Tracardi Customer Data Platform
+# Introduction
 
-[Tracardi](http://www.tracardi.com)  is an open-source Customer Data Platform.
+## What is Tracardi?
 
-TRACARDI is a Customer Data Platform that provides a low-code/no-code solution for businesses looking to use customer
-data for various purposes. As an API-first platform, TRACARDI can be easily integrated into a wide range of systems,
-whether brand new or legacy.
+[Tracardi](http://www.tracardi.com) is an open-source Customer Data Platform (CDP) designed to help businesses manage and utilize customer data effectively. It provides a low-code/no-code solution, making it accessible for organizations of all sizes to integrate and leverage customer data for various purposes. As an API-first platform, Tracardi ensures seamless integration with both new and legacy systems.
 
-One of the key features of TRACARDI is its ability to **ingest, aggregate, and store customer data from multiple sources
-in real-time** This allows businesses to manage customer data at any scale, ensuring that they have access to the most
-up-to-date and comprehensive information.
+## Key Features of Tracardi
 
-TRACARDI also provides tools for **managing and modeling customer data**, including the ability to define rules that
-shape the data as it is delivered and copied into user profiles. This allows businesses to **segment customers into
-custom groups and target them more effectively**.
+### Real-Time Data Ingestion and Storage
+Tracardi excels in ingesting, aggregating, and storing customer data from multiple sources in real-time. This capability allows businesses to manage customer data at any scale, ensuring they always have access to the most up-to-date and comprehensive information.
 
-In addition to managing customer data, TRACARDI can also be used to **personalize the user experience** through
-real-time customer segmentation and targeting. This allows businesses to deliver more relevant and targeted content and
-experiences to their customers, **improving the overall customer experience**.
+### Customer Data Management and Modeling
+Tracardi offers robust tools for managing and modeling customer data. Businesses can define rules that shape the data as it is delivered, allowing for effective customer segmentation and targeting. This helps in creating custom customer groups for more precise marketing efforts.
 
-TRACARDI also provides **tools for unifying customer data** from various sources into a single profile, including the
-ability to de-duplicate customer records and blend multiple customer accounts into a single unified profile. This makes
-it easier for businesses to manage and understand their customer data.
+### Personalization and Customer Experience
+Through real-time customer segmentation and targeting, Tracardi enables businesses to personalize the user experience. This ensures that customers receive relevant and targeted content, improving their overall experience with the brand.
 
-Finally, TRACARDI is a powerful **framework for creating marketing automation** apps, enabling businesses to easily send
-data to other systems and automate various processes. Overall, TRACARDI is a comprehensive platform that provides a wide
-range of tools for managing, understanding, and utilizing customer data.
+### Unified Customer Profiles
+Tracardi provides tools for unifying customer data from various sources into a single profile. This includes de-duplicating records and blending multiple accounts, making it easier to manage and understand customer data comprehensively.
 
-## Screenshots
+### Marketing Automation Framework
+Tracardi serves as a powerful framework for creating marketing automation apps. It facilitates the easy sending of data to other systems and automates various processes, streamlining marketing operations.
 
-### Browsing events
+## How Tracardi Performs Its Services
 
-![Browsing events](images/browsing-events.png)
+Tracardi collects data throughout customer journeys[^1], capturing this information in the form of events[^2] that
+include both context and event-specific data. Each event is linked to a profile that is maintained over the entire
+interaction period with the customer, whether through a website, mobile application, or other platforms.
 
-### Workflows
+Customer data is aggregated into a profile[^3], and the process of attaching this data to profiles is defined using the
+graphical editor within the Tracardi system. This editor allows administrators to specify how data is linked to
+profiles, ensuring a comprehensive view of each customer's interactions.
 
-![Workflow](images/workflow.png)
+By integrating Tracardi with your system, such as a SaaS service, you can track each customer's interactions with your
+company. The information collected may encompass various consumer decisions, including:
 
-### Test console
+- Whether the customer decides to subscribe to your services
+- The circumstances under which they make these decisions (event context)
+- Whether the customer is satisfied with your service or considers canceling it
 
-![Test Console](images/test-console.png)
+This detailed tracking and aggregation of customer data enable businesses to better understand and respond to customer behavior and preferences.
 
-## Video introduction
+## Why We Created Tracardi
 
-[YOUTUBE Tracardi](https://www.youtube.com/channel/UC0atjYqW43MdqNiSJBvN__Q)
+Tracardi was developed to help companies gain deeper insights into and foster better engagement with their customers. As
+businesses increasingly recognize the crucial role of customer experience and engagement, Tracardi offers a
+comprehensive set of tools and features that enable them to track and analyze customer behavior, delivering personalized
+and seamless experiences across various channels.
 
+A significant portion of Tracardi's customer base is in the retail and financial industry, where companies have found it
+to be an invaluable resource for understanding customer interactions with their products and services. By leveraging
+Tracardi, retailers can achieve a competitive edge, enhancing the customer experience in ways that drive engagement and
+loyalty. This is accomplished through strategies such as personalization, cross-channel integration, and omnichannel
+services.
+
+Tracardi can help retailers to:
+
+- Understand their customers better
+- Improve customer experience and provide timely assistance
+- Optimize website content and navigation
+- Enhance search functionality to help customers find information easily
+- Reduce unsolicited messaging
+- Integrate data from various sources
+
+By utilizing these capabilities, Tracardi empowers businesses to create more meaningful and effective customer
+interactions, ultimately leading to increased satisfaction and loyalty.
+
+[^1]:
+A customer journey is an entire experience a customer has while communicating with a brand. It considers the complete
+interaction roadmap from brand discovery to purchasing and beyond. The focus isn't on transactions, but rather how the
+customer feels after interactions with the brand.
+
+[^2]:
+In programming and software design, an event is an action or occurrence recognized by software, often originating
+asynchronously from the external environment, that may be handled by the software. Computer events can be generated or
+triggered by the system, by the user, or in other ways.
+
+[^4]:
+A user profile is a collection of settings and information associated with a user. It can be defined as the explicit
+digital representation of the identity of the user with respect to the operating environment, which could be operating
+systems, software applications or websites. The user profile helps in associating characteristics with a user and helps
+in ascertaining the interactive behavior of the user along with preferences.
