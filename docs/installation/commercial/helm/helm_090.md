@@ -40,9 +40,9 @@ The installation takes the following steps:
 * Init script for dependencies setup (it is part of the tracardi pod)
 * API/GUI and workers installation
 
-# Installation settings
+## Installation settings
 
-## Local installation settings
+### Local installation settings
 
 To customize your installation create local `values.yaml` file and define custom setting for your setup.
 
@@ -50,11 +50,11 @@ Your custom `values.yaml` file will contain only the values you wish to change f
 specified in your custom file will use the defaults provided by the HelmChart. This approach keeps your configuration
 concise and easy to manage.
 
-## Configuration of Services Used by Tracardi
+### Configuration of Services Used by Tracardi
 
 Dependencies configuration is the part in helm configuration that defines all the services that Tracardi needs to connect to. 
 
-### Elasticsearch Configuration
+#### Elasticsearch Configuration
 
 The Elasticsearch configuration specifies the necessary settings to connect Tracardi to an Elasticsearch service. This
 includes the host, port, schema, and authentication details. Here's a detailed breakdown:
@@ -83,7 +83,7 @@ elastic:
 | **index.shards**   | Number of primary shards for the index                                   | Use default or change |
 | **index.replicas** | Number of replica shards for the index                                   | Use default or change                      |
 
-### Redis Configuration
+#### Redis Configuration
 
 The Redis configuration sets up the connection details for the Redis service, including the host, port, and database
 number.
@@ -107,7 +107,7 @@ redis:
 | **port**          | Port number on which Redis is running            ||
 | **db**            | Redis database number to use                     ||
 
-### Apache Pulsar Configuration
+#### Apache Pulsar Configuration
 
 The Apache Pulsar configuration includes settings for connecting to the Pulsar service, including the host, port, and
 whether to enable Pulsar.
@@ -135,7 +135,7 @@ pulsar:
 | **cluster_name**  | Name of the Pulsar cluster                       |              |
 | **enabled**       | Toggle to enable or disable Pulsar               |              |
 
-### MySQL Configuration
+#### MySQL Configuration
 
 The MySQL configuration details the settings for connecting to a MySQL service, including the host, port, and database
 name.
@@ -157,7 +157,7 @@ mysql:
 | **database**      | Name of the database to use                      |              |
 | **port**          | Port number on which MySQL is running            |              |
 
-### Tenant Management Service (TMS) API Configuration
+#### Tenant Management Service (TMS) API Configuration
 
 The TMS API configuration outlines the settings for the Tenant Management Service, a microservice responsible for
 managing tenants in a multi-tenant environment.
@@ -203,15 +203,15 @@ tmsApi:
   host: be-fa-tms-svc.tracardi-com-090.svc.cluster.local 
 ```
 
-## Telemetry Configuration
+### Telemetry Configuration
 
-### Introduction
+#### Introduction
 
 The telemetry configuration in Tracardi allows for monitoring and logging various metrics and logs related to the
 system's performance and operations. This feature is currently experimental and is disabled by default. You can safely
 remove this section from your custom `values.yaml` file.
 
-### Configuration Fields
+#### Configuration Fields
 
 The `telemetry` section in the `values.yaml` file includes several fields to configure the telemetry settings. Here’s a
 detailed breakdown of each field:
@@ -232,7 +232,7 @@ telemetry:
     batch_size: 512  # Batch size for telemetry export
 ```
 
-### Explanation of Fields
+#### Explanation of Fields
 
 | Field             | Description                                      |
 |-------------------|--------------------------------------------------|
@@ -249,15 +249,15 @@ telemetry:
 | **delay**         | Delay between telemetry export operations.       |
 | **batch_size**    | The number of telemetry entries to include in each export batch. |
 
-## Load Balancer Configuration
+### Load Balancer Configuration
 
-### Introduction
+#### Introduction
 
 The load balancer configuration section in the `values.yaml` file is used to set up a load balancer for your Tracardi
 installation, particularly when deploying on DigitalOcean. This section includes options to enable or disable the load
 balancer and to specify a certificate ID for secure connections.
 
-### Configuration Fields
+#### Configuration Fields
 
 The `digitalOcean` section includes the following fields:
 
@@ -267,7 +267,7 @@ digitalOcean:
   certId: ""  # Certificate ID for DigitalOcean
 ```
 
-### Explanation of Fields
+#### Explanation of Fields
 
 | Field             | Description                                                                         |
 |-------------------|-------------------------------------------------------------------------------------|
@@ -283,15 +283,15 @@ digitalOcean:
   loadBalancer: true
 ```
 
-## General Tracardi Configuration
+### General Tracardi Configuration
 
-### Overview
+#### Overview
 
 The general configuration settings for Tracardi govern how the system operates, including multi-tenancy, ID prefixes,
 demo mode, system events, and visit handling. Below is a detailed breakdown of each configuration
 option.
 
-### Configuration Fields
+#### Configuration Fields
 
 ```yaml
 config:
@@ -309,7 +309,7 @@ config:
     close: 1200  # Time in seconds to close a visit after inactivity
 ```
 
-### Explanation of Fields
+#### Explanation of Fields
 
 | Field                   | Description                                                                                                                                                                                                                                                                                        |
 |-------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -320,7 +320,7 @@ config:
 | **enableVisitEnded**    | Indicates whether visit ended events are enabled.                                                                                                                                                                                                                                                  |
 | **visit.close**         | The time in seconds to close a visit after inactivity.                                                                                                                                                                                                                                             |
 
-### Example
+#### Example
 
 Here is an example `values.yaml` file with only the necessary fields modified:
 
@@ -335,96 +335,15 @@ config:
     close: 1800  # Set visit close time to 1800 seconds (30 minutes)
 ```
 
-## Definition of Secrets
+### Definition of Secrets
 
-### Overview
+#### Overview
 
 This section of the configuration file contains all the necessary credentials and secrets required for Tracardi and its
 dependencies, including databases and external services. Proper management of these secrets is crucial for the security
 and functionality of the system.
 
-### Configuration Fields
-
-```yaml
-secrets:
-  dockerHub: "tracardi-dockerhub"  # Docker Hub repository name. This is the default value; leave it as it is unless you keep the Docker Hub token somewhere else.
-
-  installation:
-    token: "tracardi"  # Installation token. Change to a random value. Keep this secret as you will need it to reinstall or recover the system if any of the indices go missing.
-    valueFrom:
-      token:
-        name: ""  # Name of the secret containing the installation token.
-        key: ""  # Key of the installation token in the secret.
-
-  license:
-    licenseKey: ""  # License key for the application.
-    valueFrom:
-      licenseKey:
-        name: ""  # Name of the secret containing the license key.
-        key: ""  # Key of the license key in the secret.
-
-  tms:
-    secretKey: ""  # Secret key for Tenant Management Service (TMS).
-    apiKey: ""  # API key for TMS.
-    valueFrom:
-      secretKey:
-        name: ""  # Name of the secret containing the TMS secret key.
-        key: ""  # Key of the TMS secret key in the secret.
-      apiKey:
-        name: ""  # Name of the secret containing the TMS API key.
-        key: ""  # Key of the TMS API key in the secret.
-
-  redis:
-    password: ""  # Password for Redis.
-    valueFrom:
-      password:
-        name: ""  # Name of the secret containing the Redis password.
-        key: ""  # Key of the Redis password in the secret.
-
-  elastic:
-    username: "elastic"  # Username for Elasticsearch.
-    password: ""  # Password for Elasticsearch.
-    valueFrom:
-      username:
-        name: ""  # Name of the secret containing the Elasticsearch username.
-        key: ""  # Key of the Elasticsearch username in the secret.
-      password:
-        name: ""  # Name of the secret containing the Elasticsearch password.
-        key: ""  # Key of the Elasticsearch password in the secret.
-
-  pulsar:
-    token: ""  # Token for Pulsar.
-    valueFrom:
-      token:
-        name: ""  # Name of the secret containing the Pulsar token.
-        key: ""  # Key of the Pulsar token in the secret.
-
-  mysql:
-    username: ""  # Username for MySQL.
-    password: ""  # Password for MySQL.
-    valueFrom:
-      username:
-        name: ""  # Name of the secret containing the MySQL username.
-        key: ""  # Key of the MySQL username in the secret.
-      password:
-        name: ""  # Name of the secret containing the MySQL password.
-        key: ""  # Key of the MySQL password in the secret.
-
-  maxmind:
-    licenseKey: ""  # License key for MaxMind.
-    accountId: ""  # Account ID for MaxMind.
-    valueFrom:
-      licenseKey:
-        name: ""  # Name of the secret containing the MaxMind license key.
-        key: ""  # Key of the MaxMind license key in the secret.
-      accountId:
-        name: ""  # Name of the secret containing the MaxMind account ID.
-        key: ""  # Key of the MaxMind account ID in the secret.
-
-  mergingToken: "1180015e-38d0-4eb7-8017-40e6a7937659"  # Token used for merging. This should be a random value and should not be changed after installation. Keep it permanent across all your installations.
-```
-
-### Explanation of Fields
+##### Explanation of Fields
 
 
 | Field                   | Description                                                                                                                                                                        | Required                     |
@@ -445,9 +364,9 @@ secrets:
 | **mergingToken**        | Token used for hashing data during profile merging. This should be a random value and should not be changed after installation. It must remain permanent across all installations. | yes                          |
 
 
-## Docker Image Settings
+### Docker Image Settings
 
-### Overview
+#### Overview
 
 The image settings section in the `values.yaml` file is used to configure the API component of Tracardi. This includes
 settings for both the private and public APIs, such as Docker image details, replica configurations, logging levels, and
@@ -456,7 +375,7 @@ requirements.
 
 Private API is Used for communication with GUI while Public for collecting Data.
 
-### Configuration Fields
+#### Configuration Fields
 
 ```yaml
 # API configuration
@@ -510,9 +429,9 @@ api:
       port: 8585  # Port for the public API service
 ```
 
-### Explanation of Fields
+#### Explanation of Fields
 
-#### API Image
+##### API Image
 
 | Field        | Type   | Description                                         | Default                  |
 |--------------|--------|-----------------------------------------------------|--------------------------|
@@ -520,7 +439,7 @@ api:
 | **pullPolicy**| String | Image pull policy. Common values are `Always`, `IfNotPresent`, and `Never`. | `IfNotPresent`           |
 | **tag**      | String | Image tag, ensuring compatibility between GUI and backend. | `0.9.0.3`                |
 
-#### Private/Public API Configuration
+##### Private/Public API Configuration
 
 | Field                           | Type    | Description                                                                                     | Default |
 |---------------------------------|---------|-------------------------------------------------------------------------------------------------|---------|
@@ -538,7 +457,7 @@ api:
 | **config.sessionPartitioning**  | String  | Strategy for session partitioning. Common values are `day`, `week`, `month`, `quarter`, `year`. | `"quarter"` |
 | **service.port**                | Integer | Port for the private API service.                                                               | `8686`  |
 
-### Differences in Configuration of Private and Public API
+#### Differences in Configuration of Private and Public API
 
 | Configuration Field       | Private API                       | Public API                        |
 |---------------------------|------------------------------------|-----------------------------------|
@@ -548,13 +467,13 @@ api:
 | **service.port**          | 8686                               | 8585                              |
 | **topologySpreadConstraints** | Not applicable                     | Configured                        |
 
-## GUI Configuration
+### GUI Configuration
 
-### Overview
+#### Overview
 
 The GUI configuration section in the `values.yaml` file specifies the settings for the graphical user interface (GUI) of Tracardi. This includes details about the Docker image, replica settings, service ports, and specific configuration options for the console.
 
-### Configuration Fields
+#### Configuration Fields
 
 ```yaml
 # GUI configuration
@@ -574,7 +493,7 @@ gui:
       allowUpdatesOnProduction: "no"  # Whether to allow updates on production
 ```
 
-### Explanation of Fields
+#### Explanation of Fields
 
 | Field                   | Description                                                                           |
 |-------------------------|---------------------------------------------------------------------------------------|
@@ -587,13 +506,13 @@ gui:
 | **config.mode**         | Mode for the console operation. Available values "with-deployment" or "no-deployment" |
 | **config.allowUpdatesOnProduction** | Indicates whether updates are allowed on production.                                  |
 
-## TMS Configuration
+### TMS Configuration
 
-### Overview
+#### Overview
 
 The Tenant Management Service (TMS) configuration section in the `values.yaml` file specifies the settings for TMS in Tracardi. This includes details about the Docker image, replica settings, logging levels, service ports, and the service name.
 
-### Configuration Fields
+#### Configuration Fields
 
 ```yaml
 # TMS configuration
@@ -612,7 +531,7 @@ tms:
       name: be-fa-tms-svc  # The name of the TMS service
 ```
 
-### Explanation of Fields
+#### Explanation of Fields
 
 | Field                   | Description                                                                        |
 |-------------------------|------------------------------------------------------------------------------------|
@@ -625,13 +544,13 @@ tms:
 | **service.name**        | Name of the TMS service.                                                           |
 | **loggingLevel**        | Logging level for TMS.  Common values are `ERROR`, `WARNING`, `INFO`, and `DEBUG`. |
 
-## Worker Configuration
+### Worker Configuration
 
-### Overview
+#### Overview
 
 The worker configuration section in the `values.yaml` file specifies the settings for various worker components in Tracardi, including background workers, APM (Auto Profile Merging) profiles, and upgrade workers. This configuration includes Docker image details, replica settings, logging levels, and resource limits.
 
-### Configuration Fields
+#### Configuration Fields
 
 ```yaml
 # Worker configuration
@@ -699,43 +618,15 @@ worker:
           cpu: 500m  # CPU limit for the upgrade worker
 ```
 
-### Explanation of Fields
+##### Bridges Configuration
 
-| Component      | Field                                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-|----------------|----------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Background** | image.repository                       | Docker repository for the background worker image                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-|                | image.tag                              | Image tag for the background worker                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-|                | image.pullPolicy                       | Image pull policy                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-|                | enabled                                | Whether the background worker is enabled                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-|                | replicas                               | Number of replicas for the background worker                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-|                | spread.rules.topologySpreadConstraints | Topology spread constraints for the background worker                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-|                | config.loggingLevel                    | Logging level for the background worker. Common values are `ERROR`, `WARNING`, `INFO`, and `DEBUG`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-|                | config.bulker                          | The Bulker Configuration are setting for message bulker that is responsible for collecting messages and managing them for background storage operations. It operates by enforcing two main constraints: a size limit, which is the maximum number of messages the queue can hold, and a time limit, which dictates how long messages can remain in the queue. If either of these limits is exceeded, the queued data is flushed to storage. Additionally, if no new data arrives within a specified period of inactivity, a timeout is triggered that automatically flushes any remaining data in the queue that has not yet been processed. |
-| **APM**        | image.repository                       | Docker repository for the APM image                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-|                | image.tag                              | Image tag for the APM                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-|                | image.pullPolicy                       | Image pull policy.Common values are `Always`, `IfNotPresent`, and `Never`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-|                | profile.enabled                        | Whether the APM profile is enabled                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-|                | profile.replicas                       | Number of replicas for the APM profile                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-|                | profile.config.loggingLevel            | Logging level for the APM profile                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| **Upgrade**    | image.repository                       | Docker repository for the upgrade worker image                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-|                | image.tag                              | Image tag for the upgrade worker                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-|                | image.pullPolicy                       | Image pull policy                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-|                | docker.enabled                         | Whether Docker is enabled for the upgrade worker                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-|                | docker.replicas                        | Number of replicas for the upgrade worker                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-|                | docker.config.saveLogs                 | Whether to save logs                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-|                | docker.config.loggingLevel             | Logging level for the upgrade worker                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-|                | docker.config.resources.limits.memory  | Memory limit for the upgrade worker                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-|                | docker.config.resources.limits.cpu     | CPU limit for the upgrade worker                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-
-## Bridges Configuration
-
-### Overview
+#### Overview
 
 The bridges configuration section in the `values.yaml` file specifies the settings for the services responsible for
 collecting data from different channels. This includes the queue bridge configuration, detailing Docker image settings,
 enabling or disabling the bridge, setting the number of replicas, and logging levels. By default none standard bridges are disabled. You can safely remove this configuration form you local `values.yaml` file.
 
-### Configuration Fields
+#### Configuration Fields
 
 ```yaml
 # Bridges configuration for services responsible for collecting data from different channels
@@ -752,9 +643,9 @@ bridge:
         loggingLevel: "INFO"  # Logging level for the queue bridge
 ```
 
-### Explanation of Fields
+#### Explanation of Fields
 
-#### Queue Bridge
+##### Queue Bridge
 
 | Field                   | Description                                                                                    |
 |-------------------------|------------------------------------------------------------------------------------------------|
