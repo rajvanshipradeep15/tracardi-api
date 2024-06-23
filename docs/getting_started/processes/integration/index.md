@@ -9,11 +9,11 @@ processed.
 ### Integrations via API
 
 1. **API Calls**:
-   - [Track Endpoint](api/index.md) - Tracardi supports integration with external systems through APIs. This involves setting up API endpoints to receive data from third-party applications or to send processed data and insights back to these applications.
-   - [Webhook Endpoint](webhook/index.md) - Tracardi supports integration via webhooks, which is an endpoint that does not require a predefined data schema.
+    - **[Track Endpoint](api/index.md)** - Tracardi supports integration with external systems through APIs. This involves setting up API endpoints to receive data from third-party applications or to send processed data and insights back to these applications.
+    - **[Webhook Endpoint](webhook/index.md)** - Tracardi supports integration via webhooks, which is an endpoint that does not require a predefined data schema.
 
 2. **[Javascript](js/index.md)**:
-    - This type of integration allows for the automatic event ingestion from the web page.
+    - This type of integration allows for the automatic event ingestion from the web page. Javascript snippet uses [Track Endpoint](api/index.md).
 
 Both methods use the Tracardi API.
 

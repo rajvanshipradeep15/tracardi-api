@@ -138,10 +138,13 @@ nav:
           - getting_started/definitions/identification_point.md
 
       - Tracardi Codings:
+          - getting_started/codings/index.md
           - getting_started/codings/dot_notation.md
           - getting_started/codings/logic_notation.md
           - getting_started/codings/object_template.md
           - getting_started/codings/templates.md
+          - getting_started/codings/event_validation.md
+          - getting_started/codings/searching.md
       - Tracardi Processes:
           - getting_started/processes/integration/index.md
           - Types of Integration:
@@ -744,6 +747,13 @@ nav:
           - qa/how_to_move_events_to_warehouse.md.md
           - qa/what_are_differences_between_session_and_profile_id.md
           - qa/what_is_event_traits_schema.md
+
+          - qa/how_apm_watchdog_works.md
+          - qa/how_to_configure_amp.md
+          - qa/what_prefixes_in_the_ids_mean.md
+          - qa/what_versions_of_dependencies.md
+          - qa/when_profile_is_marked_for_merging.md
+
           - qa/errors/error_1.md
           - qa/errors/error_10.md
           - qa/errors/error_11.md

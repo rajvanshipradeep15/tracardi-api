@@ -4,4 +4,4 @@
 * **[Logic Coding](logic_notation.md)**
 * **[Object Templates](object_template.md)**
 * **[Templates](templates.md)**
-* **Validator schemas**
+* **[Event Validator Schema](event_validation.md)**
