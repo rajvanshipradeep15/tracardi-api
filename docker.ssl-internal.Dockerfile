@@ -25,7 +25,7 @@ RUN rm -rf app/tracker/index.css
 WORKDIR /
 
 ## Copy manual
-COPY docs docs/
+COPY docs_old docs/
 COPY mkdocs.yml /
 
 ## Install docs dependencies

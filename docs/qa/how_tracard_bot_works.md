@@ -5,7 +5,7 @@ leverages advanced AI technology to process your inquiry. However, please note t
 handle queries related to Tracardi only.
 
 Tracardi Bot serves as a useful tool for swiftly accessing information found on the Tracardi documentation page
-at http://docs.tracardi.com. It can filter and rephrase the responses to better align with your specific question. It's
+at http://manual.tracardi.com. It can filter and rephrase the responses to better align with your specific question. It's
 important to mention that our community covers the expenses associated with maintaining this bot, as it relies on OpenAI
 resources. To ensure the bot remains available to everyone, we kindly request your consideration in making a small
 donation to our project at https://opencollective.com/tracardi-cdp.

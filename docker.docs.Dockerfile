@@ -8,7 +8,7 @@ RUN apt-get install -y git
 RUN /usr/local/bin/python -m pip install --upgrade pip
 
 ## Copy manual
-COPY docs docs/
+COPY docs_old docs/
 COPY mkdocs.yml /
 
 ## Install dependencies
