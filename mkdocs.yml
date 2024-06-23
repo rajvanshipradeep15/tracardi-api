@@ -452,6 +452,11 @@ nav:
           - Docker:
               - installation/commercial/docker/docker.md
               - installation/commercial/docker/docker_compose.md
+          - Kubernetes:
+              - installation/commercial/helm/index.md
+              - Helm:
+                  - installation/commercial/helm/helm_082.md
+                  - installation/commercial/helm/helm_090.md
   - Configuration:
       - configuration/index.md
       - configuration/best_practises.md

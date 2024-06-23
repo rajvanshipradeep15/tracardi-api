@@ -1,9 +1,9 @@
-## Tracardi Helm Chart Installation Guide version 0.8.2
+# Installation with HelmChart version 0.8.2
 
 This document provides comprehensive instructions for installing the commercial Tracardi application on a Kubernetes (
 K8s) cluster using the Helm chart.
 
-### Prerequisites
+## Prerequisites
 
 Before initiating the installation process, ensure you have completed the following prerequisites:
 
@@ -17,7 +17,7 @@ Before initiating the installation process, ensure you have completed the follow
 
 4. **Elasticsearch, Redis, Mysql, Apache Pulsar Credentials**: Gather for all required services it will be necessary during the installation process.
 
-#### Namespace Creation
+### Namespace Creation
 
 Execute the following command to create a Kubernetes namespace named "tracardi":
 
@@ -25,7 +25,7 @@ Execute the following command to create a Kubernetes namespace named "tracardi":
 kubectl create ns tracardi
 ```
 
-#### Docker Hub Access Configuration
+### Docker Hub Access Configuration
 
 Configure access to Docker Hub by creating a Kubernetes secret containing your Docker Hub login token. Use the following
 command:
@@ -38,7 +38,7 @@ kubectl create secret docker-registry tracardi-dockerhub \
     -n tracardi
 ```
 
-#### System Secrets Configuration
+### System Secrets Configuration
 
 To proceed with the installation, you need to set up essential system secrets including the license key, Elasticsearch
 password, and Redis password. Create a Kubernetes secret file, as illustrated in the example below:

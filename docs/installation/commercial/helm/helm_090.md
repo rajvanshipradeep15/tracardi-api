@@ -1,4 +1,4 @@
-# Tracardi Installation with HelmChart version 0.9.0
+# Installation with HelmChart version 0.9.0
 
 This document provides comprehensive instructions for installing the commercial Tracardi application on a Kubernetes (
 K8s) cluster using the Helm chart.
