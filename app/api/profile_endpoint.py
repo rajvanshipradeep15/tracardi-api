@@ -4,13 +4,12 @@ from fastapi import APIRouter
 from fastapi import Depends
 from fastapi.responses import Response
 
-from tracardi.exceptions.exception import DuplicatedRecordException
 from tracardi.domain.profile import Profile
-from tracardi.service.profile_deduplicator import deduplicate_profile
 from tracardi.service.storage.driver.elastic import profile as profile_db
-from tracardi.service.storage.driver.elastic import event as event_db
+from tracardi.service.storage.driver.elastic.profile import load_modified_top_profiles
+from tracardi.service.storage.elastic.interface.event import load_events_by_profile_and_field
 from tracardi.service.storage.index import Resource
-from tracardi.service.tracking.storage.profile_storage import delete_profile
+from tracardi.service.tracking.storage.profile_storage import delete_profile, load_profile
 from .auth.permissions import Permissions
 from tracardi.config import tracardi
 
@@ -21,10 +20,19 @@ router = APIRouter(
 
 
 @router.get("/profile/count", tags=["profile"],
-            dependencies=[Depends(Permissions(roles=["admin", "developer", "marketer", "maintainer"]))],
             include_in_schema=tracardi.expose_gui_api)
 async def count_profiles():
     return await profile_db.count()
+
+@router.get("/profile/duplicates/count", tags=["profile"],
+            include_in_schema=tracardi.expose_gui_api)
+async def count_profile_duplicates(id: str):
+    profile = await load_profile(id)
+    if profile:
+        result = await profile_db.count_profile_duplicates(profile.ids)
+        return result.get("count", 0)
+    return 0
+
 
 
 @router.post("/profiles/import", dependencies=[Depends(Permissions(roles=["admin"]))], tags=["profile"],
@@ -92,14 +100,7 @@ async def delete_profile_by_id(id: str, response: Response):
 
 @router.get("/profile/{profile_id}/by/{field}", tags=["profile"], include_in_schema=tracardi.expose_gui_api)
 async def profile_data_by(profile_id: str, field: str, table: bool = False):
-    bucket_name = f"by_{field}"
-    result = await event_db.aggregate_profile_events_by_field(profile_id,
-                                                              field=field,
-                                                              bucket_name=bucket_name)
-
-    if table:
-        return {id: count for id, count in result.aggregations[bucket_name][0].items()}
-    return [{"name": id, "value": count} for id, count in result.aggregations[bucket_name][0].items()]
+    return await load_events_by_profile_and_field(profile_id, field, table)
 
 
 @router.get("/profiles/{qualify}/segment/{segment_names}", tags=["profile"], include_in_schema=tracardi.expose_gui_api)
@@ -118,3 +119,9 @@ async def find_profiles_by_segments(segment_names: str, qualify: str):
         condition = 'must'
     records = await profile_db.load_profiles_by_segments(segment_names.split(','), condition=condition)
     return records.dict()
+
+
+@router.get('/profiles/top/modified', tags=['profile'], include_in_schema=tracardi.expose_gui_api)
+async def load_top_profiles(limit: Optional[int] = 5):
+    result = await load_modified_top_profiles(limit)
+    return result.dict()

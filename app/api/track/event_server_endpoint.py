@@ -1,10 +1,11 @@
-import logging
+from time import time
 from json import JSONDecodeError
 from typing import Optional
 
 from fastapi import APIRouter, Request, status, HTTPException, Response
 from fastapi.responses import RedirectResponse
 
+from tracardi.domain.event_redirect import EventRedirect
 from tracardi.service.notation.dict_traverser import DictTraverser
 from tracardi.service.notation.dot_accessor import DotAccessor
 
@@ -13,31 +14,29 @@ from tracardi.domain.entity import Entity
 from tracardi.domain.event_metadata import EventPayloadMetadata
 from tracardi.domain.payload.event_payload import EventPayload
 from tracardi.domain.time import Time
-from tracardi.service.storage.driver.elastic import event_redirect as event_redirect_db
-from tracardi.service.storage.driver.elastic import session as session_db
-from tracardi.service.tracker import track_event
-from tracardi.config import tracardi
+from tracardi.service.storage.elastic.interface.session import load_session_from_db
+from tracardi.service.storage.mysql.mapping.event_redirect_mapping import map_to_event_redirect
+from tracardi.service.storage.mysql.service.event_redirect_service import EventRedirectService
 from tracardi.domain.payload.tracker_payload import TrackerPayload
 from tracardi.exceptions.exception import UnauthorizedException, FieldTypeConflictException, \
-    EventValidationException
-from tracardi.exceptions.log_handler import log_handler
+    EventValidationException, BlockedException
+from tracardi.exceptions.log_handler import get_logger
 from app.api.track.service.ip_address import get_ip_address
+from tracardi.service.track_event import track_event
 from tracardi.service.url_constructor import url_query_params_to_dict
 
-logger = logging.getLogger(__name__)
-logger.setLevel(tracardi.logging_level)
-logger.addHandler(log_handler)
+logger = get_logger(__name__)
 
 router = APIRouter()
 
 
 async def parse_properties(request: Request):
-    if request.headers.get('Content-Type', '') == 'application/json':
+    if request.headers.get('Content-Type', '').lower().startswith('application/json'):
         try:
             return await request.json()
         except JSONDecodeError:
             return {}
-    elif request.headers.get('Content-Type', '') in ['multipart/form-data', 'application/x-www-form-urlencoded']:
+    elif request.headers.get('Content-Type', '').lower() in ['multipart/form-data', 'application/x-www-form-urlencoded']:
         return await request.form()
     else:
         return await request.body()
@@ -53,39 +52,48 @@ async def _track(tracker_payload: TrackerPayload, host: str, allowed_bridges):
             tracker_payload,
             host,
             allowed_bridges=allowed_bridges)
-    except UnauthorizedException as e:
+    except BlockedException as e:
+        message = str(e)
+        logger.warning(message)
+        raise HTTPException(detail=message,
+                            status_code=status.HTTP_406_NOT_ACCEPTABLE)
+    except (UnauthorizedException, PermissionError) as e:
         message = str(e)
         logger.error(message)
         raise HTTPException(detail=message,
-                             status_code=status.HTTP_401_UNAUTHORIZED)
+                            status_code=status.HTTP_401_UNAUTHORIZED)
     except FieldTypeConflictException as e:
         message = "FieldTypeConflictException: {} - {}".format(str(e), e.explain())
         logger.error(message)
         raise HTTPException(detail=message,
-                             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
+                            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
     except EventValidationException as e:
         message = "Validation failed with error: {}".format(str(e))
         logger.error(message)
         raise HTTPException(detail=message,
-                             status_code=status.HTTP_406_NOT_ACCEPTABLE)
+                            status_code=status.HTTP_406_NOT_ACCEPTABLE)
     except Exception as e:
         message = str(e)
         logger.error(message)
         raise HTTPException(detail=message,
-                             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @router.post("/track", tags=['collector'])
 async def track(tracker_payload: TrackerPayload, request: Request, response: Response, profile_less: bool = False):
 
+    start = time()
+
     tracker_payload.set_headers(dict(request.headers))
     tracker_payload.profile_less = profile_less
     result = await _track(tracker_payload,
-                        get_ip_address(request),
-                        allowed_bridges=['rest'])
+                          get_ip_address(request),
+                          allowed_bridges=['rest'])
 
     if result and result.get('errors', []):
         response.status_code = 226
+
+    logger.info(f"Track finished with in {time()-start}s")
 
     return result
 
@@ -104,6 +112,7 @@ async def track_async(tracker_payload: TrackerPayload, request: Request, profile
 
 
 @router.post("/collect/{event_type}/{source_id}/{session_id}", tags=['collector'])
+@router.post("/collect/{event_type}/{source_id}/{session_id}/", tags=['collector'])
 async def track_post_webhook_with_session(event_type: str, source_id: str, request: Request, session_id: Optional[str] = None):
     """
     Collects data from request POST and adds event type. It stays profile-less if no session provided.
@@ -136,6 +145,7 @@ async def track_post_webhook_with_session(event_type: str, source_id: str, reque
 
 
 @router.get("/collect/{event_type}/{source_id}/{session_id}", tags=['collector'])
+@router.get("/collect/{event_type}/{source_id}/{session_id}/", tags=['collector'])
 async def track_get_webhook(event_type: str, source_id: str, request: Request, session_id: Optional[str] = None):
     """
     Collects data from request GET and adds event type. It stays profile-less if no session provided.
@@ -168,6 +178,7 @@ async def track_get_webhook(event_type: str, source_id: str, request: Request, s
 
 
 @router.get("/collect/{event_type}/{source_id}", tags=['collector'])
+@router.get("/collect/{event_type}/{source_id}/", tags=['collector'])
 async def track_get_webhook(event_type: str, source_id: str, request: Request):
     """
     Collects data from request GET and adds event type. It stays profile-less if no session provided.
@@ -200,6 +211,7 @@ async def track_get_webhook(event_type: str, source_id: str, request: Request):
 
 
 @router.post("/collect/{event_type}/{source_id}", tags=['collector'])
+@router.post("/collect/{event_type}/{source_id}/", tags=['collector'])
 async def track_post_webhook(event_type: str, source_id: str, request: Request):
     """
     Collects data from request POST and adds event type. It stays profile-less.
@@ -244,16 +256,19 @@ async def request_redirect(request: Request, redirect_id: str, session_id: Optio
     if session_id:
         session_id = session_id.strip()
     redirect_id = redirect_id.strip()
-    redirect_config = await event_redirect_db.load_by_id(redirect_id)
 
-    if not redirect_config:
+    ers = EventRedirectService()
+
+    redirect_record = await ers.load_by_id(redirect_id)
+
+    if not redirect_record.exists():
         raise HTTPException(status_code=404)
 
     body = {}
     if request.method in ['POST', 'PUT', 'DELETE']:
         body = await request.body()
         content_type = request.headers.get('content-type', 'xform')
-        if content_type == 'application/json':
+        if content_type.lower().startswith('application/json'):
             try:
                 body = await request.json()
             except Exception:
@@ -267,7 +282,7 @@ async def request_redirect(request: Request, redirect_id: str, session_id: Optio
 
     session = None
     if session_id:
-        session = await session_db.load_by_id(session_id)
+        session = await load_session_from_db(session_id)
 
     dot = DotAccessor(
         payload={
@@ -278,9 +293,11 @@ async def request_redirect(request: Request, redirect_id: str, session_id: Optio
     )
     converter = DictTraverser(dot)
 
-    properties = converter.reshape(redirect_config.props)
+    event_redirect: EventRedirect = redirect_record.map_to_object(map_to_event_redirect)
+
+    properties = converter.reshape(event_redirect.props)
     tracker_payload = TrackerPayload(
-        source=Entity(id=redirect_config.source.id),
+        source=Entity(id=event_redirect.source.id),
         session=session,
         metadata=EventPayloadMetadata(time=Time()),
         context={},
@@ -289,7 +306,7 @@ async def request_redirect(request: Request, redirect_id: str, session_id: Optio
         },
         properties={},
         events=[
-            EventPayload(type=redirect_config.event_type, properties=properties)
+            EventPayload(type=event_redirect.event_type, properties=properties)
         ],
         options={"saveSession": False}
     )
@@ -302,4 +319,4 @@ async def request_redirect(request: Request, redirect_id: str, session_id: Optio
             allowed_bridges=['redirect']
         )
 
-    return RedirectResponse(redirect_config.url)
+    return RedirectResponse(event_redirect.url)

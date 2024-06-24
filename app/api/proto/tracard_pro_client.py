@@ -1,4 +1,3 @@
-import logging
 import os
 from typing import Optional
 
@@ -7,18 +6,35 @@ from app.api.proto.stubs import pro_services_pb2 as pb2, pro_services_pb2_grpc a
 from google.protobuf import json_format
 
 from tracardi.config import tracardi
-from tracardi.exceptions.log_handler import log_handler
-from tracardi.service.pro.auth import get_tpro_token
+from tracardi.service.storage.mysql.service.tracardi_pro_service import TracardiProService
+
+from tracardi.exceptions.log_handler import get_logger
 
 _local_path = os.path.dirname(__file__)
-logging.basicConfig(level=logging.ERROR)
-logger = logging.getLogger(__name__)
-logger.setLevel(tracardi.logging_level)
-logger.addHandler(log_handler)
+
+logger = get_logger(__name__)
 
 with open(os.path.join(_local_path, 'certs/server.crt'), 'rb') as f:
     trusted_certs = f.read()
 credentials = grpc.ssl_channel_credentials(root_certificates=trusted_certs)
+
+
+async def get_tpro_token():
+    """
+    Return None if not configured otherwise returns token.
+    """
+    try:
+        tps = TracardiProService()
+        record = await tps.load_by_tenant_id()
+
+        if not record.exists():
+            return None
+
+        return record.rows.token
+
+    except Exception as e:
+        logger.error(f"Exception when reading pro service user data: {str(e)}")
+        return None
 
 
 class TracardiProClient(object):

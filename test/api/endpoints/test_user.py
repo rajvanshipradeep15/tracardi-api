@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from app.api.domain.user_payload import UserPayload
+from tracardi.domain.user_payload import UserPayload
 from test.utils import Endpoint
 
 
@@ -15,7 +15,7 @@ def test_should_add_read_and_delete_user():
 
         data = {
             "password": "password",
-            "full_name": "full name",
+            "name": "full name",
             "email": user_email,
             "roles": ["admin", "marketer", "developer"],
             "disabled": False
@@ -39,7 +39,7 @@ def test_should_add_read_and_delete_user():
 
         data = {
             "password": "password2",
-            "full_name": "Full name 2",
+            "name": "Full name 2",
             "email": user_email,
             "roles": ["developer", "marketer"],
             "disabled": True

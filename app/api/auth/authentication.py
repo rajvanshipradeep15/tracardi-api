@@ -1,8 +1,6 @@
-import logging
-from tracardi.config import tracardi
-from tracardi.exceptions.log_handler import log_handler
-from tracardi.service.storage.driver.elastic import user_log as user_log_db
-from tracardi.service.storage.driver.elastic import user as user_db
+from tracardi.domain import ExtraInfo
+from tracardi.exceptions.log_handler import get_logger
+from tracardi.service.storage.mysql.service.user_service import UserService
 from ..auth.user_db import token2user
 from fastapi.security import OAuth2PasswordBearer
 from tracardi.domain.user import User
@@ -12,39 +10,77 @@ from tracardi.exceptions.exception import LoginException
 _singleton = None
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/user/token")
 
-logger = logging.getLogger(__name__)
-logger.setLevel(tracardi.logging_level)
-logger.addHandler(log_handler)
+logger = get_logger(__name__)
 
 
 class Authentication:
 
     @staticmethod
     async def _authorize(username, password) -> User:  # username exists
-        logger.info(f"Authorizing {username}...")
+        logger.debug(
+            f"Authorizing {username}...",
+            extra=ExtraInfo.exact(
+                "Authentication",
+                class_name="Authentication",
+                package=__name__,
+                user_id=username
+            )
+        )
 
         try:
-            user = await user_db.get_by_credentials(
-                email=username,
-                password=password
-            )  # type: User
+            us = UserService()
+            user: User = await us.load_by_credentials(
+                    email=username,
+                    password=password
+                )
         except Exception as e:
             raise LoginException(f"System not installed. Got error {str(e)}")
 
         if user is None:
-            await user_log_db.add_log(email=username, successful=False)
+            logger.warning(
+                "Incorrect username or password.",
+                extra=ExtraInfo.exact(
+                    origin="authentication",
+                    class_name=Authentication,
+                    package=__name__,
+                    user_id=username
+                )
+            )
             raise LoginException("Incorrect username or password.")
 
-        if user.disabled:
-            await user_log_db.add_log(email=username, successful=False)
+        if not user.enabled:
+            logger.warning(
+                "This account was disabled.",
+                extra=ExtraInfo.exact(
+                    origin="authentication",
+                    class_name=Authentication,
+                    package=__name__,
+                    user_id=username
+                )
+            )
             raise LoginException("This account was disabled")
 
         if user.is_expired():
-            await user_log_db.add_log(email=username, successful=False)
+            logger.warning(
+                "This account has expired.",
+                extra=ExtraInfo.exact(
+                    origin="authentication",
+                    class_name=Authentication,
+                    package=__name__,
+                    user_id=username
+                )
+            )
             raise LoginException("This account has expired.")
 
-        await user_log_db.add_log(email=username, successful=True)
-
+        logger.info(
+            "User logged-in.",
+            extra=ExtraInfo.exact(
+                origin="authentication",
+                class_name="Authentication",
+                package=__name__,
+                user_id=username
+            )
+        )
         return user
 
     async def login(self, email, password):

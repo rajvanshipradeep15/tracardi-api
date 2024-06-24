@@ -2,12 +2,12 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends
 from app.api.auth.permissions import Permissions
-from app.config import server
+from tracardi.config import server
 from tracardi.config import tracardi
 from tracardi.service.storage.driver.elastic import log as log_db
 
 router = APIRouter(
-    dependencies=[Depends(Permissions(roles=["admin", "maintainer"]))]
+    dependencies=[Depends(Permissions(roles=["maintainer"]))]
 )
 
 
@@ -15,7 +15,7 @@ router = APIRouter(
 @router.get("/logs", tags=["logs"], include_in_schema=tracardi.expose_gui_api)
 async def get_logs(page: Optional[int] = None, query: Optional[str] = None):
     """
-    Returns list of all Tracardi API logs. Accessible by roles: "admin"
+    Returns list of all Tracardi API logs.
     """
     if page is None:
         page = 0

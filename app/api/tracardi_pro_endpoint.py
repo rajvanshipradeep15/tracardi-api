@@ -1,4 +1,3 @@
-import logging
 from collections import OrderedDict
 from typing import Optional
 
@@ -7,25 +6,21 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import ValidationError
 
 from app.api.auth.permissions import Permissions
-from tracardi.domain.entity import Entity
 from tracardi.domain.pro_service_form_data import TProMicroserviceCredentials, ProService, ProMicroService
 from tracardi.service.plugin.domain.register import Plugin, MicroserviceConfig
 from tracardi.service.plugin.plugin_install import install_remote_plugin, install_plugin
 from app.api.domain.credentials import Credentials
-from tracardi.domain.resource import Resource, ResourceRecord
-from tracardi.domain.sign_up_data import SignUpData, SignUpRecord
+from tracardi.domain.resource import Resource
+from tracardi.domain.sign_up_data import SignUpData
 from app.api.proto.tracard_pro_client import TracardiProClient
 from tracardi.exceptions.log_handler import log_handler
-from tracardi.service.storage.driver.elastic import resource as resource_db
-from tracardi.service.storage.driver.elastic import pro as pro_db
-from tracardi.service.storage.driver.elastic import action as action_db
+from tracardi.exceptions.log_handler import get_logger
 from tracardi.config import tracardi
+from tracardi.service.storage.mysql.service.resource_service import ResourceService
+from tracardi.service.storage.mysql.service.tracardi_pro_service import TracardiProService
 from tracardi.service.tracardi_http_client import HttpClient
 
-logging.basicConfig(level=logging.ERROR)
-logger = logging.getLogger(__name__)
-logger.setLevel(tracardi.logging_level)
-logger.addHandler(log_handler)
+logger = get_logger(__name__)
 
 router = APIRouter(
     dependencies=[Depends(Permissions(roles=["admin", "developer"]))]
@@ -36,31 +31,33 @@ tracardi_pro_client = TracardiProClient(host=tracardi.tracardi_pro_host,
                                         secure=False)
 
 
-async def _store_resource_record(data: Entity):
-    return await resource_db.save(data)
+async def _store_resource_record(data: Resource):
+    rs = ResourceService()
+    return await rs.insert(data)
 
 
 @router.get("/tpro/validate", tags=["tpro"], include_in_schema=tracardi.expose_gui_api)
-async def is_token_valid():
+async def is_token_valid() -> Optional[bool]:
     """
     Return None if not configured otherwise returns True if credentials are valid or False.
     """
     try:
-        result = await pro_db.read_pro_service_endpoint()
+        tps = TracardiProService()
+        record = await tps.load_by_tenant_id()
+
+        if not record.exists():
+            return None
+
+        token = tracardi_pro_client.validate(token=record.rows.token)
+
+        return token is not None
 
     except ValidationError as e:
         logger.error(f"Validation error when reading pro service user data: {str(e)}")
-        result = None
+        return None
     except Exception as e:
         logger.error(f"Exception when reading pro service user data: {str(e)}")
-        result = None
-
-    if result is None:
         return None
-
-    token = tracardi_pro_client.validate(token=result.token)
-
-    return token is not None
 
 
 @router.post("/tpro/sign_in", tags=["tpro"], include_in_schema=tracardi.expose_gui_api)
@@ -69,16 +66,15 @@ async def tracardi_pro_sign_in(credentials: Credentials):
     Handles signing in to Tracardi PRO service
     """
     try:
+
         token, host = tracardi_pro_client.sign_in(credentials.username, credentials.password)
-        result = await pro_db.read_pro_service_endpoint()
+
+        tps = TracardiProService()
+        result = await tps.authorize(token)
 
         # Save locally if data from remote differs with local data.
-        if result is None or result.token != token:
-            sign_up_record = SignUpRecord(id='0', token=token)
-            result = await pro_db.save_pro_service_endpoint(sign_up_record)
-
-            if result.saved == 0:
-                raise ConnectionError("Could not save Tracardi Pro data.")
+        if not result:
+            await tps.insert(token)
 
         return True
     except PermissionError as e:
@@ -97,13 +93,11 @@ async def tracardi_pro_sign_up(sign_up_data: SignUpData):
     Handles signing up to Tracardi PRO service
     """
     try:
-        # todo save more contact data on Pro server
-        token = tracardi_pro_client.sign_up(sign_up_data.username, sign_up_data.password)
-        sign_up_record = SignUpRecord(id='0', token=token)
-        result = await pro_db.save_pro_service_endpoint(sign_up_record)
 
-        if result.saved == 0:
-            raise ConnectionError("Could not save Tracardi Pro endpoint.")
+        token = tracardi_pro_client.sign_up(sign_up_data.username, sign_up_data.password)
+
+        tps = TracardiProService()
+        await tps.upsert(token)
 
         return True
 
@@ -165,9 +159,9 @@ async def save_tracardi_pro_resource(pro: ProService):
         resource.credentials.production = _remove_redundant_data(resource.credentials.production)
         resource.credentials.test = _remove_redundant_data(resource.credentials.test)
 
-        record = ResourceRecord.encode(resource)
-        result['resource'] = await _store_resource_record(record)
-        await resource_db.refresh()
+        # record = ResourceRecord.encode(resource)
+        result['resource'] = await _store_resource_record(resource)
+        # await resource_db.refresh()
 
     # Add plugins
 
@@ -177,7 +171,6 @@ async def save_tracardi_pro_resource(pro: ProService):
             plugin = Plugin(**plugin)
             response = await install_plugin(plugin.spec.module)
             result['plugin'].append(response)
-        await action_db.refresh()
 
     return result
 
@@ -200,9 +193,9 @@ async def save_tracardi_pro_microservice(pro: ProMicroService):
 
     production_credentials = TProMicroserviceCredentials(**resource.credentials.production)
 
-    record = ResourceRecord.encode(resource)
-    result = await _store_resource_record(record)
-    await resource_db.refresh()
+    # record = ResourceRecord.encode(resource)
+    result = await _store_resource_record(resource)
+    # await resource_db.refresh()
 
     # Create plugin
 

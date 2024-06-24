@@ -34,7 +34,7 @@ potentially disrupt the production environment.
 
 ## Licensing commercial version of Tracardi
 
-No need to worry about separate licenses for staging and production servers, all commercial licenses cover both.
+No need to worry about separate licenses for staging and production servers, all commercial licenses cover both servers.
 
 !!! Tip
 
@@ -50,11 +50,3 @@ No need to worry about separate licenses for staging and production servers, all
 
 More information can be found at https://youtu.be/10W7OzezF_k
 
----
-This documentation answers the following questions:
-
-* How to test workflows?
-* What is a staging server?
-* What is the process of staging in Tracardi?
-* How does Tracardi ensure the security of its staging server?
-* Do I need a separate license for the staging server if I have a commercial version of Tracardi?

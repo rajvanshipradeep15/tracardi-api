@@ -1,23 +1,19 @@
 import json
-import logging
 from hashlib import sha1
 from typing import Optional
 
 from app.api.auth.token_memory import TokenMemory
-from tracardi.config import tracardi
 from tracardi.domain.user import User
-from tracardi.exceptions.log_handler import log_handler
+from tracardi.exceptions.log_handler import get_logger
 
-logger = logging.getLogger(__name__)
-logger.setLevel(tracardi.logging_level)
-logger.addHandler(log_handler)
+logger = get_logger(__name__)
 
 
 class TokenDb:
 
     def __init__(self):
         self._token_memory = TokenMemory()
-        self.salt = "skdjsd9328r&"
+        self.salt = "fe-skd~jS(ADsd-9328r&aS5ZFGdaF-STREas4TA"
 
     def _get_token(self, user: User) -> str:
         return sha1((user.id + self.salt).encode('utf-8')).hexdigest()

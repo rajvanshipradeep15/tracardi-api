@@ -1,21 +1,24 @@
 import os
+import logging
 import sys
 import traceback
 from datetime import datetime
 import sentry_sdk
 
 from app.middleware.context import ContextRequestMiddleware
+from tracardi.service.elastic.connection import wait_for_connection
 from tracardi.service.license import License, SCHEDULER, IDENTIFICATION, COMPLIANCE, RESHAPING, REDIRECTS, VALIDATOR, \
     LICENSE, MULTI_TENANT
+from tracardi.service.logging.formater import CustomFormatter
+from tracardi.service.storage.mysql.service.mysql_installation import wait_for_mysql_connection
+from tracardi.service.storage.redis_client import wait_for_redis_connection
 
 _local_dir = os.path.dirname(__file__)
 sys.path.append(f"{_local_dir}/api/proto/stubs")
 
-import logging
 from starlette.responses import JSONResponse
 from time import time
-from app.config import server
-from tracardi.service.elastic.connection import wait_for_connection
+from tracardi.config import server
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Request
 from starlette.staticfiles import StaticFiles
@@ -26,7 +29,6 @@ from app.api import (
     profile_endpoint,
     flow_endpoint,
     generic_endpoint,
-    segments_endpoint,
     tql_endpoint,
     health_endpoint,
     session_endpoint,
@@ -47,25 +49,28 @@ from app.api import (
     task_endpoint,
     storage_endpoint,
     destination_endpoint,
-    user_log_endpoint,
     user_account_endpoint,
     install_endpoint,
     delete_indices_endpoint,
     setting_endpoint,
     migration_endpoint,
     report_endpoint,
-    live_segments_endpoint,
     console_log_endpoint,
     event_type_mapping,
     bridge_endpoint,
     entity_endpoint,
-    staging_endpoint,
     customer_endpoint,
-    event_to_profile, cache_endpoint
+    event_to_profile,
+    cache_endpoint,
+    configuration_endpoint,
+    github_endpoint,
+    maintanace_endpoint,
+    system_entity_property_endpoint,
+    system_entity_table_column_endpoint
 )
 from app.api.track import event_server_endpoint
 from tracardi.config import tracardi
-from tracardi.exceptions.log_handler import log_handler
+from tracardi.exceptions.log_handler import get_logger
 from tracardi.service.storage.elastic_client import ElasticClient
 from app.api.licensed_endpoint import get_router
 
@@ -83,7 +88,7 @@ else:
     identification_point_endpoint = get_router(prefix="/identification")
 
 if License.has_service(COMPLIANCE):
-    from com_tracardi.endpoint import consent_data_compliance_endpoint
+    from com_tracardi.endpoint import event_data_compliance_endpoint
 else:
     consent_data_compliance_endpoint = get_router(prefix="/consent/compliance")
 
@@ -105,48 +110,30 @@ else:
 if License.has_service(LICENSE):
     from com_tracardi.endpoint import event_to_profile_copy
     from com_tracardi.endpoint import event_props_to_event_traits_copy
-    from com_tracardi.endpoint import metric_endpoint
-    from com_tracardi.config import com_tracardi_settings
     from com_tracardi.endpoint import field_update_log_endpoint
-    from com_tracardi.endpoint import profile_activation
+    from com_tracardi.endpoint import activation_endpoint
+    from com_tracardi.endpoint import event_data_compliance_endpoint
+    from com_tracardi.endpoint import deploy_endpoint
+    from com_tracardi.endpoint import audience_endpoint
+    from com_tracardi.endpoint import subscription_endpoint
+    from com_tracardi.endpoint import queue_endpoint
 else:
     event_to_profile_copy = get_router(prefix="/events/copy")
     event_props_to_event_traits_copy = get_router(prefix="/events/index")
     metric_endpoint = get_router(prefix="/metric")
     field_update_log_endpoint = get_router(prefix="/field/update")
-    profile_activation = get_router(prefix="/profile/activate")
+    activation_endpoint = get_router(prefix="/activation")
+    event_data_compliance_endpoint = get_router(prefix="/consent/compliance")
+    deploy_endpoint = get_router(prefix="/deploy")
+    audience_endpoint = get_router(prefix="/audience")
+    subscription_endpoint = get_router(prefix="/subscription")
+    queue_endpoint = get_router(prefix="/queue")
 
 
 if License.has_service(MULTI_TENANT):
     from com_tracardi.endpoint import tenant_install_endpoint
 
-
-logging.basicConfig(level=logging.ERROR)
-logger = logging.getLogger(__name__)
-logger.setLevel(tracardi.logging_level)
-logger.addHandler(log_handler)
-
-print(f"""
-88888888888 8888888b.         d8888  .d8888b.         d8888 8888888b.  8888888b. 8888888
-    888     888   Y88b       d88888 d88P  Y88b       d88888 888   Y88b 888   Y88b  888
-    888     888    888      d88P888 888    888      d88P888 888    888 888    888  888
-    888     888   d88P     d88P 888 888            d88P 888 888   d88P 888    888  888
-    888     8888888P"     d88P  888 888           d88P  888 8888888P"  888    888  888
-    888     888 T88b     d88P   888 888    888   d88P   888 888 T88b   888    888  888
-    888     888  T88b   d8888888888 Y88b  d88P  d8888888888 888  T88b  888   d88P  888
-    888     888   T88b d88P     888  "Y8888P"  d88P     888 888   T88b 8888888P" 8888888
-
-{str(tracardi.version)}""", flush=True)
-if License.has_license():
-    license = License.check()
-
-    print(
-        f"Commercial Licensed issued for: {license.owner}, expires: {datetime.fromtimestamp(license.expires) if license.expires > 0 else 'Perpetual'} ",
-        flush=True)
-
-    print(f"Services {list(license.get_service_ids())}", flush=True)
-else:
-    print("License: MIT + “Commons Clause” License Condition v1.0", flush=True)
+logger = get_logger(__name__)
 
 tags_metadata = [
     {
@@ -154,7 +141,7 @@ tags_metadata = [
         "description": "Manage profiles. Read more about core concepts of TRACARDI in documentation.",
         "externalDocs": {
             "description": "Profile external docs",
-            "url": "http://docs.tracardi.com",
+            "url": "http://manual.tracardi.com",
         },
     },
     {
@@ -162,7 +149,7 @@ tags_metadata = [
         "description": "Manage data resources. Read more about core concepts of TRACARDI in documentation.",
         "externalDocs": {
             "description": "Resource external docs",
-            "url": "http://docs.tracardi.com",
+            "url": "http://manual.tracardi.com",
         },
     },
     {
@@ -170,7 +157,7 @@ tags_metadata = [
         "description": "Manage flow rule triggers. Read more about core concepts of TRACARDI in documentation.",
         "externalDocs": {
             "description": "Rule external docs",
-            "url": "http://docs.tracardi.com",
+            "url": "http://manual.tracardi.com",
         },
     },
     {
@@ -178,7 +165,7 @@ tags_metadata = [
         "description": "Manage flows. Read more about core concepts of TRACARDI in documentation.",
         "externalDocs": {
             "description": "Flows external docs",
-            "url": "http://docs.tracardi.com",
+            "url": "http://manual.tracardi.com",
         },
     },
     {
@@ -186,7 +173,7 @@ tags_metadata = [
         "description": "Manage events. Read more about core concepts of TRACARDI in documentation.",
         "externalDocs": {
             "description": "Events external docs",
-            "url": "http://docs.tracardi.com",
+            "url": "http://manual.tracardi.com",
         },
     },
     {
@@ -195,10 +182,10 @@ tags_metadata = [
     },
     {
         "name": "tracker",
-        "description": "Read more about TRACARDI event server in documentation. http://docs.tracardi.com",
+        "description": "Read more about TRACARDI event server in documentation. http://manual.tracardi.com",
         "externalDocs": {
             "description": "External docs",
-            "url": "http://docs.tracardi.com",
+            "url": "http://manual.tracardi.com",
         },
     }
 ]
@@ -266,10 +253,9 @@ application.mount("/uix",
                       directory=os.path.join(_local_dir, "../uix")),
                   name="uix")
 
-application.include_router(profile_activation.router)
+application.include_router(activation_endpoint.router)
 application.include_router(event_server_endpoint.router)
 application.include_router(tql_endpoint.router)
-application.include_router(segments_endpoint.router)
 application.include_router(resource_endpoint.router)
 application.include_router(rule_endpoint.router)
 application.include_router(flow_endpoint.router)
@@ -293,7 +279,6 @@ application.include_router(log_endpoint.router)
 application.include_router(tracardi_pro_endpoint.router)
 application.include_router(storage_endpoint.router)
 application.include_router(destination_endpoint.router)
-application.include_router(user_log_endpoint.router)
 application.include_router(user_account_endpoint.router)
 application.include_router(install_endpoint.router)
 application.include_router(import_endpoint.router)
@@ -301,7 +286,6 @@ application.include_router(task_endpoint.router)
 application.include_router(delete_indices_endpoint.router)
 application.include_router(migration_endpoint.router)
 application.include_router(report_endpoint.router)
-application.include_router(live_segments_endpoint.router)
 application.include_router(event_reshaping_schema_endpoint.router)
 application.include_router(event_validator_endpoint.router)
 application.include_router(console_log_endpoint.router)
@@ -309,11 +293,9 @@ application.include_router(event_type_mapping.router)
 application.include_router(event_source_redirects.router)
 application.include_router(bridge_endpoint.router)
 application.include_router(entity_endpoint.router)
-application.include_router(consent_data_compliance_endpoint.router)
+application.include_router(event_data_compliance_endpoint.router)
 application.include_router(identification_point_endpoint.router)
 application.include_router(scheduler_endpoint.router)
-application.include_router(metric_endpoint.router)
-application.include_router(staging_endpoint.router)
 application.include_router(customer_endpoint.router)
 application.include_router(event_to_profile.router)
 application.include_router(event_to_profile_copy.router)
@@ -322,33 +304,66 @@ application.include_router(event_type_predefined.router)
 application.include_router(setting_endpoint.router)
 application.include_router(field_update_log_endpoint.router)
 application.include_router(cache_endpoint.router)
+application.include_router(deploy_endpoint.router)
+application.include_router(audience_endpoint.router)
+application.include_router(subscription_endpoint.router)
+application.include_router(configuration_endpoint.router)
+application.include_router(github_endpoint.router)
+application.include_router(maintanace_endpoint.router)
+application.include_router(queue_endpoint.router)
+application.include_router(system_entity_property_endpoint.router)
+application.include_router(system_entity_table_column_endpoint.router)
 
 if License.has_service(MULTI_TENANT):
     application.include_router(tenant_install_endpoint.router)
 
-if server.performance_tracking:
-    sentry_sdk.init(
-        dsn="https://9c7c026fcfb5f9bd0ee63eec492316ab@o1093519.ingest.sentry.io/4505827219734528",
-        # Set traces_sample_rate to 1.0 to capture 100%
-        # of transactions for performance monitoring.
-        # We recommend adjusting this value in production.
-        traces_sample_rate=1.0,
-        # Set profiles_sample_rate to 1.0 to profile 100%
-        # of sampled transactions.
-        # We recommend adjusting this value in production.
-        profiles_sample_rate=1.0,
-    )
-
 @application.on_event("startup")
 async def app_starts():
-    logger.info(f"TRACARDI version {str(tracardi.version)} set-up starts.")
-    if License.has_license():
-        logger.info(f"TRACARDI async processing:  {com_tracardi_settings.async_processing}.")
+    logging.getLogger("uvicorn.access").handlers[0].setFormatter(CustomFormatter())
+
+    await wait_for_mysql_connection()
+    wait_for_redis_connection()
+    await wait_for_connection()
+
+    if server.performance_tracking is not None:
+        sentry_sdk.init(
+            dsn=server.performance_tracking,
+            # Set traces_sample_rate to 1.0 to capture 100%
+            # of transactions for performance monitoring.
+            # We recommend adjusting this value in production.
+            traces_sample_rate=1.0,
+            # Set profiles_sample_rate to 1.0 to profile 100%
+            # of sampled transactions.
+            # We recommend adjusting this value in production.
+            profiles_sample_rate=1.0,
+        )
+
+    if License.has_service(LICENSE):
         logger.info(f"TRACARDI multi-tenancy:  {tracardi.multi_tenant}.")
         logger.info(f"TRACARDI multi-tenancy API:  {tracardi.multi_tenant_manager_url}.")
-    await wait_for_connection(no_of_tries=10)
-    logger.info("TRACARDI set-up finished.")
-    logger.info(f"TRACARDI version {str(tracardi.version)} ready to operate.")
+
+    print(f"""
+    88888888888 8888888b.         d8888  .d8888b.         d8888 8888888b.  8888888b. 8888888
+        888     888   Y88b       d88888 d88P  Y88b       d88888 888   Y88b 888   Y88b  888
+        888     888    888      d88P888 888    888      d88P888 888    888 888    888  888
+        888     888   d88P     d88P 888 888            d88P 888 888   d88P 888    888  888
+        888     8888888P"     d88P  888 888           d88P  888 8888888P"  888    888  888
+        888     888 T88b     d88P   888 888    888   d88P   888 888 T88b   888    888  888
+        888     888  T88b   d8888888888 Y88b  d88P  d8888888888 888  T88b  888   d88P  888
+        888     888   T88b d88P     888  "Y8888P"  d88P     888 888   T88b 8888888P" 8888888
+
+    {str(tracardi.version)}""", flush=True)
+
+    if License.has_license():
+        license = License.check()
+
+        print(
+            f"Commercial Licensed issued for: {license.owner}, expires: {datetime.fromtimestamp(license.expires) if license.expires > 0 else 'Perpetual'} ",
+            flush=True)
+
+        print(f"Services {list(license.get_service_ids())}", flush=True)
+    else:
+        print("License: MIT + “Commons Clause” License Condition v1.0", flush=True)
 
 
 @application.middleware("http")
@@ -387,5 +402,4 @@ async def app_shutdown():
 
 if __name__ == "__main__":
     import uvicorn
-
     uvicorn.run("app.main:application", host="0.0.0.0", port=8686, log_level='info', workers=1)

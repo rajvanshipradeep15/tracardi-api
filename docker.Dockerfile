@@ -32,7 +32,7 @@ RUN rm -rf app/tracker/index.css
 WORKDIR /
 
 ## Copy manual
-COPY docs docs/
+COPY docs_old docs/
 COPY mkdocs.yml /
 
 ## Install docs dependencies
@@ -48,3 +48,9 @@ RUN mv docs app
 
 WORKDIR /app
 ENV VARIABLE_NAME="application"
+
+# Set a default value for TAG_VERSION
+ARG IMAGE_TAG=unknown
+ENV IMAGE_TAG=${IMAGE_TAG}
+
+CMD ["uvicorn", "app.main:application", "--proxy-headers", "--host", "0.0.0.0",  "--port", "80", "--log-level", "info"]

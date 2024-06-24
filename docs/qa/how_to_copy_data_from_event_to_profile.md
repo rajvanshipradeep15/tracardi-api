@@ -19,4 +19,4 @@ properties that eliminate the need for manual copying.
 
 Using these internal event types streamlines the use of Tracardi and simplifies the process of data collection and
 analysis. When an internal event type is utilized, the system automatically detects it and populates the profile and
-session with relevant data. To learn more about the available default event types, [please refer to the provided list](../events/internal/index.md).
+session with relevant data. To learn more about the available default event types, [please refer to the provided list](../getting_started/components/events/internal_events.md).

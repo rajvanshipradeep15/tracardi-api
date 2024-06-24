@@ -1,28 +1,30 @@
-import logging
+import os
+
+import alembic.config
+
 from collections import defaultdict
 from fastapi import APIRouter, Depends, HTTPException
-from tracardi.context import get_context
 
+from app.api.auth.permissions import Permissions
+from tracardi.context import get_context
 from tracardi.domain.version import Version
-from tracardi.exceptions.log_handler import log_handler
+from tracardi.exceptions.log_handler import get_logger
 from tracardi.service.logger_manager import save_logs
 from tracardi.service.storage.driver.elastic import raw as raw_db
 from tracardi.service.storage.indices_manager import check_indices_mappings_consistency
-from app.api.auth.permissions import Permissions
 from tracardi.domain.migration_payload import MigrationPayload
 from tracardi.process_engine.migration.migration_manager import MigrationManager, MigrationNotFoundException
 from tracardi.service.url_constructor import construct_elastic_url
 from tracardi.config import elastic, tracardi
 
+
 router = APIRouter(
-    dependencies=[Depends(Permissions(roles=["admin", "developer", "maintainer"]))]
+    dependencies=[Depends(Permissions(roles=["admin", "maintainer"]))]
 )
 
 
-logger = logging.getLogger(__name__)
-logger.setLevel(tracardi.logging_level)
-logger.addHandler(log_handler)
-
+logger = get_logger(__name__)
+_local_path = os.path.dirname(__file__)
 
 # todo can not find usages
 @router.get("/migration/check/from/{version}", tags=["migration"], include_in_schema=tracardi.expose_gui_api)
@@ -83,11 +85,13 @@ async def check_migration_consistency(version: str):
     }
 
 
-@router.post("/migration", tags=["migration"], include_in_schema=tracardi.expose_gui_api)
-async def run_migration(migration: MigrationPayload):
+@router.post("/migration/elasticsearch", tags=["migration"], include_in_schema=tracardi.expose_gui_api)
+async def run_elasticsearch_migration(migration: MigrationPayload):
     try:
 
-        tenant = get_context().tenant
+        context = get_context()
+
+        tenant = context.tenant
 
         # For none tenant based migration calculate the tenant name.
         if migration.from_tenant_name is None:
@@ -109,7 +113,8 @@ async def run_migration(migration: MigrationPayload):
 
         return await manager.start_migration(
             ids=migration.ids,
-            elastic_host=elastic_host
+            elastic_host=elastic_host,
+            context=context
         )
 
     except MigrationNotFoundException as e:
@@ -146,3 +151,11 @@ async def get_migration_schemas(from_db_version: str, from_tenant_name: str = No
 @router.get("/migrations", tags=["migration"], include_in_schema=tracardi.expose_gui_api, response_model=list)
 async def get_migrations_for_current_version():
     return MigrationManager.get_available_migrations_for_version(tracardi.version)
+
+
+@router.post("/migration/mysql/upgrade", tags=["migration"], include_in_schema=tracardi.expose_gui_api)
+def run_mysql_migration_script():
+    os.chdir(os.path.realpath(f"{_local_path}/.."))
+    alembicArgs = ['--raiseerr', 'upgrade', 'head' ]
+    alembic.config.main(argv=alembicArgs)
+

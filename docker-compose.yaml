@@ -2,43 +2,28 @@ version: "3.7"
 services:
 
   tracardi-api:
-    image: tracardi/tracardi-api:0.8.2-rc4
+    image: tracardi/tracardi-api:0.9.0.4
     environment:
       ELASTIC_HOST: http://elasticsearch:9200
       REDIS_HOST: redis://redis:6379
+      MYSQL_HOST: mysql
       LOGGING_LEVEL: info
       DEMO: "yes"
       PRODUCTION: "no"
-      MULTI_TENANT: "no"
-      AUTO_PROFILE_MERGING: "237b49d6-474c-4b1a-9ad5-07a92e04de96"
+      SAVE_LOGS: "no"
     ports:
       - 8686:80
     depends_on:
       - redis
       - elasticsearch
+      - mysql
 
   tracardi-gui:
-    image: tracardi/tracardi-gui:0.9.0-a1
-    environment:
-      MULTI_TENANT: "no"
+    image: tracardi/tracardi-gui:0.9.0.4
     ports:
       - 8787:80
     depends_on:
       - tracardi-api
-
-  tracardi-apm:
-    image: tracardi/apm:0.8.2-rc4
-    environment:
-      ELASTIC_HOST: http://elasticsearch:9200
-      REDIS_HOST: redis://redis:6379
-      LOGGING_LEVEL: info
-      MODE: worker
-      PAUSE: 15
-      PRODUCTION: "no"
-    depends_on:
-      - tracardi-api
-      - redis
-      - elasticsearch
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.13.2
@@ -47,18 +32,54 @@ services:
       ES_JAVA_OPTS: "-Xms512m -Xmx512m"
       discovery.type: single-node
       xpack.security.enabled: "false"
-      cluster.name: contextElasticSearch
+      cluster.name: ElasticSearchCluster
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
 
   redis:
     image: redis
+    ports:
+      - "6379:6379"
 
-#  worker:
-#    image: tracardi/update-worker:0.8.2-rc2
-#    environment:
-#      REDIS_HOST: redis://redis:6379
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: tracardi
+      MYSQL_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  worker:
+    image: tracardi/update-worker:0.9.0.4
+    environment:
+      ELASTIC_HOST: http://elasticsearch:9200
+      REDIS_HOST: redis://redis:6379
+      MYSQL_HOST: mysql
+    depends_on:
+      - redis
+      - elasticsearch
+      - mysql
+
+  apm:
+    image: tracardi/apm:0.9.0.4
+    environment:
+      ELASTIC_HOST: http://elasticsearch:9200
+      REDIS_HOST: redis://redis:6379
+      MYSQL_HOST: mysql
+      MODE: "worker"
+      PAUSE: 15
+    depends_on:
+      - redis
+      - elasticsearch
+      - mysql
 
 volumes:
   elasticsearch-data:
+    driver: local
+  mysql-data:
     driver: local
