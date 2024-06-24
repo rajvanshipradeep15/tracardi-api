@@ -4,10 +4,9 @@ Tracking refers to the method of consistently maintaining a single Profile ID fo
 customer interactions on a particular device. This Profile ID is crucial for identifying and linking various activities
 and behaviors of a customer to a unified profile. The device or client is responsible for ensuring that the Profile ID
 remains unchanged throughout all interactions, thereby providing a continuous and accurate record of customer behavior
-on
-that device.
+on that device. Tracking is connected with the device, while [Identification](identification.md) is a process on a server.
 
-## Tracking IDs
+## Tracking IDs (Client Side)
 
 Tracardi use 2 different IDs for maintaining customer identity: the Profile ID and the Session ID. These IDs help in
 tracking customer interactions and maintaining single customer profile across multiple sessions and devices.
@@ -47,7 +46,7 @@ tracking customer interactions and maintaining single customer profile across mu
 
 - **Profile ID**:
     - When a customer visits the website for the first time, Tracardi generates a Profile ID and stores it in the local
-      storage.
+      device storage.
     - The Profile ID should be saved on the device and remain constant across multiple visits and sessions, allowing
       Tracardi to build a comprehensive profile based on long-term interactions.
 
@@ -56,17 +55,16 @@ tracking customer interactions and maintaining single customer profile across mu
       in a cookie.
     - Session should also be saved on the device. All events and interactions within this session are tagged with the
       Session ID, enabling Tracardi to group them accordingly.
-
-- **Identity Resolution**:
-    - Tracardi uses the Profile ID to merge data from different sessions and devices. If a customer logs in from a new
-      device, Tracardi can merge the new Profile ID with the existing one based on unique identifiers like email or
-      phone number.
-    - This process ensures that all customer data is consolidated under a single profile, providing a unified view of
-      the customer's interactions and attributes.
     - A session can be used to retrieve a lost Profile ID. If an existing session is sent, the system will return the
       corresponding profile that originated this session, and the event will reference this profile along with the sent
       session. This is a very powerful way of maintaining consistency in the use-cases where the profile ID can not be
       sent.
+
+- **[Identification](identification.md) and [Identity Resolution](identity_resolution.md)**:
+    - Tracardi uses the Profile ID or Session ID to load profile before consuming the event. When the event is sent,
+      Tracardi first must identify the profile and load it.
+    - Correct identification ensures that all customer data is consolidated under a single profile.
+    - Identity resolution is a process that combines Tracing, Identification and Merging.
 
 #### Example
 

@@ -13,7 +13,7 @@ orchestration, ensuring efficient and effective data processing and engagement s
       includes emails, SMS, push notifications, and in-app messages designed to engage users at the right time with the
       right content.
 
-- **Personalized Widgets**:
+- **[Personalized Widgets](../../development/tutorial/widget.md)**:
     - Customize web pages with dynamic widgets that adapt to user profiles and actions. This allows for the collection
       of additional data using techniques like progressive profiling, which incrementally gathers more information about
       users over time.
