@@ -8,41 +8,6 @@ There are two types of merging processes.
 * **[Identification Points](../definitions/identification_point.md)**: This a realtime process that merges profiles when
   a defined event was sent e.g. `Identification` and it contains data that can be used for mering.
 
-## Automatic Profile Merging in Tracardi
-
-### Key Steps in Automatic Profile Merging
-
-1. **Data Collection and Initial Profile Creation**:
-    - When a user interacts with a website or app, Tracardi collects data and creates a new profile if one does not
-      already exist. Each interaction is tagged with a unique Profile ID and associated with a session.
-
-2. **Profile Matching**:
-    - Background process finds the data that have the same email address, Tracardi recognizes this match and merge
-      profiles.
-
-4. **Merging Profiles**:
-    - Upon finding a match, Tracardi automatically merges the new profile data with the existing profile. This process
-      involves:
-        - **Combining the attributes and traits of both profiles**: Profile data is merged according to the defined
-          merging strategy for each field..
-        - **Updating the existing profile**: New profile is created with new data from the incoming profile.
-        - **Ensuring that all historical data from both profiles are retained**: All events and sessions will be updated
-          and accurately reflected in the merged profile.
-        - **Maintaining All Profile IDs**: When profiles are merged, the Profile IDs from the individual profiles are
-          moved to the `ids` field in the merged profile. A new primary ID is then selected from the available `ids`.
-          This new primary ID will be returned in the Tracardi response. Note that profile identification uses both the
-          primary ID and the `ids` field. This means that if a device has not updated the Profile ID to the new merged
-          value, the system will still correctly identify the profile even if the old ID is sent.
-
-5. **Handling Conflicts**:
-    - During the merge, if there are conflicting data points (e.g., different values for the same attribute), Tracardi
-      follows predefined rules to resolve these conflicts. Typically, the most recent data or the data deemed most
-      reliable is retained.
-
-6. **Profile Consolidation**:
-    - The merged profile now represents a comprehensive view of the user, consolidating data from all matched profiles.
-      This unified profile is used for all future interactions.
-
 ### Example of Profile Merging
 
 1. **Initial Interaction**:
@@ -68,17 +33,17 @@ There are two types of merging processes.
     - The final unified profile under `profile-id-123` now contains data from both interactions, providing a complete
       view of the user's behavior and attributes across both devices.
 
-## Why my profile ID in the response from Tracardi is different then the one I have sent?
+## Why my profile ID in the response from Tracardi is different from the one I have sent?
 
 The profile ID you send in the tracker payload might be different in the response from Tracardi due to several reasons
 related to identity resolution, merging profiles, or system updates. Here are the key reasons why this might happen:
 
-1. **Identity Resolution**:
+1. **[Identity Resolution](identity_resolution.md)**:
     - Tracardi performs identity resolution to merge profiles with matching identifiers (like email or phone number). If
       the system detects that the profile you sent should be merged with an existing profile, it will return the ID of
       the merged profile.
 
-2. **Profile Merging**:
+2. **[Profile Merging](merging.md)**:
     - When Tracardi background processed identifies that two profile should be combined with an existing one, it creates
       a unified profile. As a result, the returned profile ID will reflect the consolidated profile rather than the one
       originally sent.
@@ -112,7 +77,7 @@ related to identity resolution, merging profiles, or system updates. Here are th
     - You send a payload with an unknown profile ID. Tracardi creates a new profile and returns the new profile ID
       generated for this interaction.
 
-## Profile ID maintenance
+#### Profile ID maintenance
 
 The above scenarios show that your client software should always save the newest returned profile ID. If the Profile ID
 changes it is a sign that the client should update the local Profile ID.
