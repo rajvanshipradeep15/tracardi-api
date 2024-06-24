@@ -87,8 +87,8 @@ async def track(tracker_payload: TrackerPayload, request: Request, response: Res
     tracker_payload.set_headers(dict(request.headers))
     tracker_payload.profile_less = profile_less
     result = await _track(tracker_payload,
-                        get_ip_address(request),
-                        allowed_bridges=['rest'])
+                          get_ip_address(request),
+                          allowed_bridges=['rest'])
 
     if result and result.get('errors', []):
         response.status_code = 226
