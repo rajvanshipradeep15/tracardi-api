@@ -1,6 +1,6 @@
 from tracardi.context import ServerContext, Context
 from test.utils import get_test_tenant
-from tracardi.service.profile_deduplicator import deduplicate_profile
+from tracardi.service.merging.facade import deduplicate_profile
 from tracardi.service.storage.elastic.interface.event import refresh_event_db, delete_event_from_db, load_event_from_db
 from tracardi.service.storage.elastic.interface.session import refresh_session_db, load_session_from_db
 from tracardi.service.tracking.storage.profile_storage import load_profile
