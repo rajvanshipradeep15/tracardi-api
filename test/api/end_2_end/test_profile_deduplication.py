@@ -1,6 +1,5 @@
 from tracardi.context import ServerContext, Context
 from test.utils import get_test_tenant
-from tracardi.service.merging.facade import deduplicate_profile
 from tracardi.service.storage.elastic.interface.event import refresh_event_db, delete_event_from_db, load_event_from_db
 from tracardi.service.storage.elastic.interface.session import refresh_session_db, load_session_from_db
 from tracardi.service.tracking.storage.profile_storage import load_profile
@@ -14,11 +13,9 @@ with ServerContext(Context(production=False, tenant=get_test_tenant())):
     import pytest
 
     from test.api.endpoints.test_event_source_endpoint import _create_event_source
-    from tracardi.domain.profile import Profile
     from tracardi.exceptions.exception import DuplicatedRecordException
     from tracardi.service.storage.driver.elastic import profile as profile_db
     from tracardi.service.storage.elastic_client import ElasticClient
-    from tracardi.service.storage.factory import storage_manager
     from tracardi.service.storage.index import Resource
 
     endpoint = Endpoint()
@@ -174,63 +171,6 @@ with ServerContext(Context(production=False, tenant=get_test_tenant())):
                 await profile_db.refresh()
                 await refresh_session_db()
                 await refresh_event_db()
-
-
-    async def test_should_deduplicate_profile():
-        with ServerContext(Context(production=False, tenant=get_test_tenant())):
-            profile_id = str(uuid4())
-            source_id = str(uuid4())
-            session_id = str(uuid4())
-
-            assert _create_event_source(source_id, "rest").status_code == 200
-
-            profile1, session1, events1 = await _create_track(source_id,
-                                                              prev_session_index,
-                                                              session_id,
-                                                              prev_profile_index,
-                                                              profile_id,
-                                                              prev_event_index,
-                                                              event_props=[
-                                                                  {"prop1": 1}, {"prop2": 2}
-                                                              ])
-
-            profile2, session2, events2 = await _create_track(source_id,
-                                                              curr_session_index,
-                                                              session_id,
-                                                              curr_profile_index,
-                                                              profile_id,
-                                                              curr_event_index,
-                                                              event_props=[
-                                                                  {"prop3": 3}, {"prop4": 4}
-                                                              ])
-
-            assert profile1 == profile2
-            assert session1 == session2
-
-            with pytest.raises(DuplicatedRecordException):
-                # Trows error duplicate record
-                await load_profile(profile_id)
-
-            # When record is duplicated also session gets duplicated
-            with pytest.raises(DuplicatedRecordException):
-                await load_session_from_db(session_id)
-
-            profile_records = await storage_manager('profile').load_by("ids", profile_id, limit=10)
-
-            assert profile_records.total == 2
-            profiles = profile_records.to_domain_objects(Profile)
-
-            indices = [profile.get_meta_data().index for profile in profiles if profile.has_meta_data()]
-
-            # Assert that profile is in 2 indices
-            assert len(set(indices)) == 2
-
-            profile = await deduplicate_profile(profile1)
-            await profile_db.refresh()
-
-            record = await load_profile(profile.id)
-            assert record is not None
-            assert record.get_meta_data() is not None
 
 
     async def test_should_deduplicate_profile_on_server():

@@ -1,12 +1,11 @@
+from time import sleep
+
 import asyncio
 
-from api.track.event_server_endpoint import track
 from tracardi.context import ServerContext, Context
 from test.utils import get_test_tenant
 from tracardi.domain.payload.tracker_payload import TrackerPayload
-from tracardi.service.merging.facade import deduplicate_profile, merge_profiles_by_id
-from tracardi.service.storage.elastic.interface.event import refresh_event_db
-from tracardi.service.storage.elastic.interface.session import refresh_session_db, load_session_from_db
+from tracardi.service.merging.facade import compute_one_profile_in_db
 from tracardi.service.track_event import track_event
 from tracardi.service.tracking.storage.profile_storage import load_profile
 
@@ -15,12 +14,7 @@ from uuid import uuid4
 from test.utils import Endpoint
 
 from test.api.endpoints.test_event_source_endpoint import _create_event_source
-from tracardi.domain.profile import Profile
-from tracardi.exceptions.exception import DuplicatedRecordException
-from tracardi.service.storage.driver.elastic import profile as profile_db
-from tracardi.service.storage.elastic_client import ElasticClient
-from tracardi.service.storage.factory import storage_manager
-from tracardi.service.storage.index import Resource
+
 
 endpoint = Endpoint()
 month = datetime.now().month
@@ -90,13 +84,17 @@ async def should_deduplicate_profile():
 
         print(response)
 
-    # Trows error duplicate record
+        sleep(5)
+
+        # Trows error duplicate record
         profile = await load_profile(profile_id)
         assert profile.id == profile_id
 
         profile = await load_profile('a')
 
-        await merge_profiles_by_id(profile)
+        profile, del_ids = await compute_one_profile_in_db(profile)
+
+        print(del_ids)
 
         # profile = await deduplicate_profile('a')
         # print(profile)
