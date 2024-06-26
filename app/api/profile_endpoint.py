@@ -66,6 +66,7 @@ async def get_profile_by_id(profile_id: str, response: Response) -> Optional[dic
     """
     Returns profile with given ID (str)
     """
+
     # This is acceptable - we see the profile from the database
     record = await profile_db.load_by_id(profile_id)
 

@@ -5,11 +5,8 @@ import asyncio
 from tracardi.context import ServerContext, Context
 from test.utils import get_test_tenant
 from tracardi.domain.payload.tracker_payload import TrackerPayload
-from tracardi.service.merging.facade import compute_one_profile_in_db
 from tracardi.service.track_event import track_event
-from tracardi.service.tracking.storage.profile_storage import load_profile
 
-from datetime import datetime, timedelta
 from uuid import uuid4
 from test.utils import Endpoint
 

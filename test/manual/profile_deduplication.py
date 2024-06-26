@@ -2,7 +2,7 @@ import asyncio
 
 from tracardi.context import ServerContext, Context
 from test.utils import get_test_tenant
-from tracardi.service.merging.facade import compute_one_profile_in_db
+from com_tracardi.service.merging.facade import compute_one_profile_in_db
 from tracardi.service.tracking.storage.profile_storage import load_profile
 
 from datetime import datetime, timedelta
