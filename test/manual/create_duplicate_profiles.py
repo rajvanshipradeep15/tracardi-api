@@ -91,7 +91,7 @@ async def create_duplicates():
                 },
                 "profile": {
                     "id": str(uuid4()),
-                    "ids": ['x']
+                    "ids": ['x', '047a9525-5ef7-407f-a2d6-0c00256846c0']
                 },
                 "session": {
                     "id": str(uuid4())
@@ -100,7 +100,7 @@ async def create_duplicates():
                     {
                         "type": "increase-interest",
                         "properties": {
-                            "interest": "i1",
+                            "interest": "i2",
                             "value": 1
                         }
                     }
