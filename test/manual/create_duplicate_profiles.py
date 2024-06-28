@@ -26,6 +26,34 @@ async def create_duplicates():
         # Duplicate profile
 
         events = [
+            # {
+            #     "source": {
+            #         "id": source_id
+            #     },
+            #     "profile": {
+            #         "id": str(uuid4()),
+            #         "ids": ['x'],
+            #         "metadata": {
+            #             "create": "2020-01-01 00:00:00",
+            #             "insert": "2020-01-01 00:00:01",
+            #             "update": "2020-01-01 00:00:01"
+            #         }
+            #     },
+            #     "session": {
+            #         "id": str(uuid4())
+            #     },
+            #     "events": [
+            #         {
+            #             "type": "profile-traits-update",
+            #             "properties": {
+            #                 "traits": {
+            #                     "test": 1,
+            #                     "test1": 2
+            #                 }
+            #             }
+            #         }
+            #     ]
+            # },
             {
                 "source": {
                     "id": source_id
@@ -42,7 +70,7 @@ async def create_duplicates():
                         "type": "profile-update",
                         "properties": {
                             "pii": {
-                                "firstname": "rko",
+                                "firstname": "Risto",
                                 "lastname": "last-name",
                                 "display_name": "string",
                                 "birthday": "2010-01-01 00:00:00",
@@ -52,7 +80,10 @@ async def create_duplicates():
                                         "polish"
                                     ]
                                 },
-                            }
+                            },
+                            "media": {
+                                    "image": "http://tracardi.com/demo/image/male/profile_39.JPG"
+                                }
                         }
                     }
                 ]
@@ -77,7 +108,7 @@ async def create_duplicates():
                                 "language": {
                                     "native": "string",
                                     "spoken": [
-                                        "english"
+                                        "spanish"
                                     ]
                                 }
                             }
@@ -91,7 +122,7 @@ async def create_duplicates():
                 },
                 "profile": {
                     "id": str(uuid4()),
-                    "ids": ['x', '047a9525-5ef7-407f-a2d6-0c00256846c0']
+                    "ids": ['x']
                 },
                 "session": {
                     "id": str(uuid4())
