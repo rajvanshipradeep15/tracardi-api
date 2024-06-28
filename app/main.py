@@ -64,7 +64,8 @@ from app.api import (
     cache_endpoint,
     configuration_endpoint,
     github_endpoint,
-    maintanace_endpoint
+    maintanace_endpoint,
+    rss_endpoint
 )
 from app.api.track import event_server_endpoint
 from tracardi.config import tracardi
@@ -309,6 +310,7 @@ application.include_router(configuration_endpoint.router)
 application.include_router(github_endpoint.router)
 application.include_router(maintanace_endpoint.router)
 application.include_router(queue_endpoint.router)
+application.include_router(rss_endpoint.router)
 
 if License.has_service(MULTI_TENANT):
     application.include_router(tenant_install_endpoint.router)
