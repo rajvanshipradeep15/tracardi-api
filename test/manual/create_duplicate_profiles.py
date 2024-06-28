@@ -71,93 +71,93 @@ async def create_duplicates():
                         "properties": {
                             "pii": {
                                 "firstname": "Risto",
-                                "lastname": "last-name",
-                                "display_name": "string",
-                                "birthday": "2010-01-01 00:00:00",
-                                "language": {
-                                    "native": "string",
-                                    "spoken": [
-                                        "polish"
-                                    ]
-                                },
+                                "lastname": "Kowaczewski",
+                                "display_name": "Risto Kowaczewski",
+                                # "birthday": "2010-01-01 00:00:00",
+                                # "language": {
+                                #     "native": "string",
+                                #     "spoken": [
+                                #         "polish"
+                                #     ]
+                                # },
                             },
                             "media": {
-                                    "image": "http://tracardi.com/demo/image/male/profile_39.JPG"
-                                }
-                        }
-                    }
-                ]
-            },
-            {
-                "source": {
-                    "id": source_id
-                },
-                "profile": {
-                    "id": str(uuid4()),
-                    "ids": ['x']
-                },
-                "session": {
-                    "id": str(uuid4())
-                },
-                "events": [
-                    {
-                        "type": "profile-update",
-                        "properties": {
-                            "pii": {
-                                "display_name": "new-display",
-                                "language": {
-                                    "native": "string",
-                                    "spoken": [
-                                        "spanish"
-                                    ]
-                                }
+                                "image": ""
                             }
                         }
                     }
                 ]
             },
-            {
-                "source": {
-                    "id": source_id
-                },
-                "profile": {
-                    "id": str(uuid4()),
-                    "ids": ['x']
-                },
-                "session": {
-                    "id": str(uuid4())
-                },
-                "events": [
-                    {
-                        "type": "increase-interest",
-                        "properties": {
-                            "interest": "i2",
-                            "value": 1
-                        }
-                    }
-                ]
-            },
-            {
-                "source": {
-                    "id": source_id
-                },
-                "profile": {
-                    "id": str(uuid4()),
-                    "ids": ['x']
-                },
-                "session": {
-                    "id": str(uuid4())
-                },
-                "events": [
-                    {
-                        "type": "increase-interest",
-                        "properties": {
-                            "interest": "i1",
-                            "value": 2
-                        }
-                    }
-                ]
-            }
+            # {
+            #     "source": {
+            #         "id": source_id
+            #     },
+            #     "profile": {
+            #         "id": str(uuid4()),
+            #         "ids": ['x']
+            #     },
+            #     "session": {
+            #         "id": str(uuid4())
+            #     },
+            #     "events": [
+            #         {
+            #             "type": "profile-update",
+            #             "properties": {
+            #                 "pii": {
+            #                     "display_name": "new-display",
+            #                     "language": {
+            #                         "native": "string",
+            #                         "spoken": [
+            #                             "spanish"
+            #                         ]
+            #                     }
+            #                 }
+            #             }
+            #         }
+            #     ]
+            # },
+            # {
+            #     "source": {
+            #         "id": source_id
+            #     },
+            #     "profile": {
+            #         "id": str(uuid4()),
+            #         "ids": ['x']
+            #     },
+            #     "session": {
+            #         "id": str(uuid4())
+            #     },
+            #     "events": [
+            #         {
+            #             "type": "increase-interest",
+            #             "properties": {
+            #                 "interest": "i2",
+            #                 "value": 1
+            #             }
+            #         }
+            #     ]
+            # },
+            # {
+            #     "source": {
+            #         "id": source_id
+            #     },
+            #     "profile": {
+            #         "id": str(uuid4()),
+            #         "ids": ['x']
+            #     },
+            #     "session": {
+            #         "id": str(uuid4())
+            #     },
+            #     "events": [
+            #         {
+            #             "type": "increase-interest",
+            #             "properties": {
+            #                 "interest": "i1",
+            #                 "value": 2
+            #             }
+            #         }
+            #     ]
+            # }
         ]
 
         for event in events:
