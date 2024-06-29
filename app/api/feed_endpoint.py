@@ -4,7 +4,7 @@ from tracardi.service.tracardi_http_client import HttpClient
 router = APIRouter()
 
 
-@router.get("/rss", tags=["info"])
+@router.get("/feed", tags=["info"])
 async def get_rss():
     """
     Returns info about Tracardi Installed Versions
